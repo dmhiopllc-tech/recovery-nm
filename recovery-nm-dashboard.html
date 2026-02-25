@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recovery NM - Scholarship Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --burgundy: #5C0F2E;
+            --gold: #F4D03F;
+            --green: #7CB342;
+            --red-chile: #D32F2F;
+            --green-chile: #689F38;
+        }
+        body {
+            background: linear-gradient(135deg, var(--burgundy) 0%, #3a0a1c 100%);
+            min-height: 100vh;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .brand-gold { color: var(--gold); }
+        .brand-green { color: var(--green); }
+        .bg-burgundy { background-color: var(--burgundy); }
+        .border-gold { border-color: var(--gold); }
+        .btn-gold {
+            background-color: var(--gold);
+            color: var(--burgundy);
+            font-weight: 600;
+        }
+        .btn-gold:hover { background-color: #f5e056; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .badge-pending { background-color: #FEF3C7; color: #92400E; }
+        .badge-approved { background-color: #D1FAE5; color: #065F46; }
+        .badge-disbursed { background-color: #DBEAFE; color: #1E40AF; }
+        .badge-rejected { background-color: #FEE2E2; color: #991B1B; }
+    </style>
+</head>
+<body>
+    
+    <!-- Header -->
+    <header class="bg-burgundy shadow-2xl border-b-4 border-gold">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="logo-container">
+                <img src="https://www.genspark.ai/api/files/s/xzmkGUph" alt="Recovery NM" style="height: 80px;">
+                <div class="text-center">
+                    <h1 class="text-3xl font-bold brand-gold">RECOVERY NM</h1>
+                    <p class="text-sm brand-green tracking-wider">HELPING NM HEAL</p>
+                </div>
+            </div>
+            <div class="mt-4 flex justify-between items-center">
+                <p class="text-gold text-sm" id="userName">Loading...</p>
+                <button onclick="handleLogout()" class="text-gold hover:text-white text-sm font-semibold transition-colors">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex space-x-2 overflow-x-auto">
+                <button onclick="showTab('dashboard')" id="tab-dashboard" class="tab-btn px-4 py-3 font-semibold text-burgundy border-b-4 border-gold whitespace-nowrap">
+                    <i class="fas fa-home mr-2"></i>Dashboard
+                </button>
+                <button onclick="showTab('donations')" id="tab-donations" class="tab-btn px-4 py-3 font-semibold text-gray-600 hover:text-burgundy border-b-4 border-transparent whitespace-nowrap">
+                    <i class="fas fa-hand-holding-usd mr-2"></i>Donations
+                </button>
+                <button onclick="showTab('scholarships')" id="tab-scholarships" class="tab-btn px-4 py-3 font-semibold text-gray-600 hover:text-burgundy border-b-4 border-transparent whitespace-nowrap">
+                    <i class="fas fa-graduation-cap mr-2"></i>Scholarships
+                    <span id="pending-badge" class="ml-2 px-2 py-1 text-xs rounded-full bg-red-600 text-white hidden">0</span>
+                </button>
+                <button onclick="showTab('reports')" id="tab-reports" class="tab-btn px-4 py-3 font-semibold text-gray-600 hover:text-burgundy border-b-4 border-transparent whitespace-nowrap">
+                    <i class="fas fa-chart-bar mr-2"></i>Reports
+                </button>
+                <button onclick="showTab('users')" id="tab-users" class="tab-btn px-4 py-3 font-semibold text-gray-600 hover:text-burgundy border-b-4 border-transparent whitespace-nowrap hidden">
+                    <i class="fas fa-users-cog mr-2"></i>Users
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto p-4 mt-4">
+        
+        <!-- Dashboard Tab -->
+        <div id="content-dashboard" class="tab-content active">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <!-- Total Donations -->
+                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4" style="border-color: var(--gold);">
+                    <div class="flex items-center">
+                        <div class="bg-yellow-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-hand-holding-usd text-2xl" style="color: var(--gold);"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Total Donations</p>
+                            <p class="text-2xl font-bold brand-gold" id="stat-donations">$0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Scholarships -->
+                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4" style="border-color: var(--green);">
+                    <div class="flex items-center">
+                        <div class="bg-green-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-graduation-cap text-2xl" style="color: var(--green);"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Scholarships Awarded</p>
+                            <p class="text-2xl font-bold brand-green" id="stat-scholarships">$0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Available Balance -->
+                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4 border-blue-500">
+                    <div class="flex items-center">
+                        <div class="bg-blue-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-wallet text-2xl text-blue-600"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Available Balance</p>
+                            <p class="text-2xl font-bold text-blue-600" id="stat-balance">$0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Approvals -->
+                <div class="bg-white rounded-lg shadow-lg p-6 border-l-4" style="border-color: var(--red-chile);">
+                    <div class="flex items-center">
+                        <div class="bg-red-100 rounded-full p-3 mr-4">
+                            <i class="fas fa-clock text-2xl" style="color: var(--red-chile);"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Pending Approvals</p>
+                            <p class="text-2xl font-bold" style="color: var(--red-chile);" id="stat-pending">0</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-bold text-burgundy mb-4">
+                    <i class="fas fa-history mr-2"></i>Recent Activity
+                </h3>
+                <div id="recent-activity" class="space-y-3">
+                    <p class="text-gray-600">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Donations Tab -->
+        <div id="content-donations" class="tab-content">
+            <div class="bg-white rounded-lg shadow-lg">
+                <div class="p-6 border-b flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-burgundy">
+                        <i class="fas fa-hand-holding-usd mr-2"></i>Donation Management
+                    </h3>
+                    <button onclick="showAddDonationModal()" class="btn-gold px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Add Donation
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div id="donations-list">
+                        <p class="text-gray-600">Loading donations...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scholarships Tab -->
+        <div id="content-scholarships" class="tab-content">
+            <div class="bg-white rounded-lg shadow-lg">
+                <div class="p-6 border-b flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-burgundy">
+                        <i class="fas fa-graduation-cap mr-2"></i>Scholarship Management
+                    </h3>
+                    <button onclick="showAddScholarshipModal()" class="btn-gold px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-plus mr-2"></i>New Scholarship Request
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div id="scholarships-list">
+                        <p class="text-gray-600">Loading scholarships...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="content-reports" class="tab-content">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-bold text-burgundy mb-4">
+                    <i class="fas fa-chart-bar mr-2"></i>Reports & Analytics
+                </h3>
+                <p class="text-gray-600">Reports coming soon...</p>
+            </div>
+        </div>
+
+        <!-- Users Tab (Super Admins Only) -->
+        <div id="content-users" class="tab-content">
+            <div class="bg-white rounded-lg shadow-lg">
+                <div class="p-6 border-b flex justify-between items-center">
+                    <h3 class="text-lg font-bold text-burgundy">
+                        <i class="fas fa-users-cog mr-2"></i>User Management (Super Admins Only)
+                    </h3>
+                    <button onclick="showAddUserModal()" class="btn-gold px-4 py-2 rounded-lg transition-colors">
+                        <i class="fas fa-user-plus mr-2"></i>Add User
+                    </button>
+                </div>
+                <div class="p-6">
+                    <div id="users-list">
+                        <p class="text-gray-600">Loading users...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Add Donation Modal -->
+    <div id="addDonationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h3 class="text-lg font-bold text-burgundy mb-4">Add New Donation</h3>
+            <form id="addDonationForm" onsubmit="return addDonation(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Donor Name/Organization *</label>
+                        <input type="text" id="donor_name" class="w-full border rounded px-3 py-2" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Amount *</label>
+                        <input type="number" step="0.01" id="donation_amount" class="w-full border rounded px-3 py-2" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Date *</label>
+                        <input type="date" id="donation_date" class="w-full border rounded px-3 py-2" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Source Type *</label>
+                        <select id="source_type" class="w-full border rounded px-3 py-2" required>
+                            <option value="">Select...</option>
+                            <option value="individual">Individual</option>
+                            <option value="foundation">Foundation</option>
+                            <option value="grant">Grant</option>
+                            <option value="corporate">Corporate</option>
+                            <option value="fundraiser">Fundraiser</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Payment Method *</label>
+                        <select id="payment_method" class="w-full border rounded px-3 py-2" required>
+                            <option value="">Select...</option>
+                            <option value="check">Check</option>
+                            <option value="cash">Cash</option>
+                            <option value="credit_card">Credit Card</option>
+                            <option value="bank_transfer">Bank Transfer</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Notes</label>
+                        <textarea id="donation_notes" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="mt-6 flex space-x-3">
+                    <button type="submit" class="flex-1 btn-gold py-2 rounded transition-colors">
+                        Add Donation
+                    </button>
+                    <button type="button" onclick="closeAddDonationModal()" class="flex-1 bg-gray-300 hover:bg-gray-400 py-2 rounded transition-colors">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Simple authentication placeholder
+        let currentUser = null;
+        
+        // Simulated users for demo
+        const demoUsers = {
+            'sean_roberts@dmhiop.com': { id: 'user_sean', full_name: 'Sean Roberts', role: 'super_admin' },
+            'gary_gamboa@dmhiop.com': { id: 'user_gary', full_name: 'Gary Gamboa', role: 'super_admin' },
+            'tatiana.schnierow@dmhiop.com': { id: 'user_tatiana', full_name: 'Tatiana Schnierow', role: 'admin' }
+        };
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🚀 Recovery NM Scholarship Management System');
+            
+            // For demo: prompt for email
+            const email = prompt('Enter your email to login:\n\nsean_roberts@dmhiop.com\ngary_gamboa@dmhiop.com\ntatiana.schnierow@dmhiop.com');
+            currentUser = demoUsers[email];
+            
+            if (!currentUser) {
+                alert('Access denied. Please contact an administrator.');
+                return;
+            }
+            
+            document.getElementById('userName').textContent = `${currentUser.full_name} (${currentUser.role === 'super_admin' ? 'Super Admin' : 'Admin'})`;
+            
+            // Show Users tab only for super admins
+            if (currentUser.role === 'super_admin') {
+                document.getElementById('tab-users').classList.remove('hidden');
+            }
+            
+            await loadDashboardData();
+        });
+
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('border-gold', 'text-burgundy');
+                el.classList.add('border-transparent', 'text-gray-600');
+            });
+            
+            // Show selected tab
+            document.getElementById('content-' + tabName).classList.add('active');
+            document.getElementById('tab-' + tabName).classList.remove('border-transparent', 'text-gray-600');
+            document.getElementById('tab-' + tabName).classList.add('border-gold', 'text-burgundy');
+            
+            // Load tab-specific data
+            if (tabName === 'donations') loadDonations();
+            if (tabName === 'scholarships') loadScholarships();
+            if (tabName === 'users') loadUsers();
+        }
+
+        async function loadDashboardData() {
+            // Demo data for now
+            document.getElementById('stat-donations').textContent = '$0';
+            document.getElementById('stat-scholarships').textContent = '$0';
+            document.getElementById('stat-balance').textContent = '$0';
+            document.getElementById('stat-pending').textContent = '0';
+            
+            document.getElementById('recent-activity').innerHTML = `
+                <div class="text-center py-8">
+                    <i class="fas fa-inbox text-4xl text-gray-300 mb-2"></i>
+                    <p class="text-gray-500">No recent activity</p>
+                    <p class="text-xs text-gray-400 mt-2">System is ready to track donations and scholarships!</p>
+                </div>
+            `;
+        }
+
+        function loadDonations() {
+            document.getElementById('donations-list').innerHTML = `
+                <div class="text-center py-8">
+                    <i class="fas fa-hand-holding-usd text-4xl text-gray-300 mb-2"></i>
+                    <p class="text-gray-500">No donations recorded yet</p>
+                    <button onclick="showAddDonationModal()" class="mt-4 btn-gold px-6 py-2 rounded-lg">
+                        Add Your First Donation
+                    </button>
+                </div>
+            `;
+        }
+
+        function loadScholarships() {
+            document.getElementById('scholarships-list').innerHTML = `
+                <div class="text-center py-8">
+                    <i class="fas fa-graduation-cap text-4xl text-gray-300 mb-2"></i>
+                    <p class="text-gray-500">No scholarships created yet</p>
+                    <button onclick="showAddScholarshipModal()" class="mt-4 btn-gold px-6 py-2 rounded-lg">
+                        Create Your First Scholarship
+                    </button>
+                </div>
+            `;
+        }
+
+        function loadUsers() {
+            if (currentUser.role !== 'super_admin') {
+                document.getElementById('users-list').innerHTML = '<p class="text-red-600">Access denied. Super Admin privileges required.</p>';
+                return;
+            }
+            
+            document.getElementById('users-list').innerHTML = `
+                <div class="space-y-4">
+                    <div class="border rounded-lg p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold">Sean Roberts</h4>
+                                <p class="text-sm text-gray-600">sean_roberts@dmhiop.com</p>
+                                <span class="inline-block mt-2 px-3 py-1 text-xs rounded-full bg-purple-100 text-purple-800">Super Admin</span>
+                            </div>
+                            <button class="text-blue-600 hover:text-blue-800 text-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </div>
+                    </div>
+                    <div class="border rounded-lg p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold">Gary Gamboa</h4>
+                                <p class="text-sm text-gray-600">gary_gamboa@dmhiop.com</p>
+                                <span class="inline-block mt-2 px-3 py-1 text-xs rounded-full bg-purple-100 text-purple-800">Super Admin</span>
+                            </div>
+                            <button class="text-blue-600 hover:text-blue-800 text-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </div>
+                    </div>
+                    <div class="border rounded-lg p-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h4 class="font-bold">Tatiana Schnierow</h4>
+                                <p class="text-sm text-gray-600">tatiana.schnierow@dmhiop.com</p>
+                                <span class="inline-block mt-2 px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-800">Admin</span>
+                            </div>
+                            <button class="text-blue-600 hover:text-blue-800 text-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showAddDonationModal() {
+            document.getElementById('addDonationModal').classList.remove('hidden');
+            document.getElementById('donation_date').valueAsDate = new Date();
+        }
+
+        function closeAddDonationModal() {
+            document.getElementById('addDonationModal').classList.add('hidden');
+            document.getElementById('addDonationForm').reset();
+        }
+
+        function addDonation(event) {
+            event.preventDefault();
+            alert('✅ Donation feature ready! Full implementation coming in next update with database integration.');
+            closeAddDonationModal();
+            return false;
+        }
+
+        function showAddScholarshipModal() {
+            alert('✅ Scholarship creation feature ready! Full implementation with auto-ID generation and dual-approval coming in next update.');
+        }
+
+        function showAddUserModal() {
+            alert('✅ User management feature ready! Full implementation with role management coming in next update.');
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                currentUser = null;
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
