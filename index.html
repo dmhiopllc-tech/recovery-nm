@@ -5,13 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recovery NM - Login</title>
     
-    <!-- ✅ Load Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <!-- ✅ Font Awesome -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     
-    <!-- ✅ INLINE CSS - No external Tailwind needed -->
     <style>
         * {
             margin: 0;
@@ -187,7 +183,6 @@
 <body>
     
     <div class="container">
-        <!-- Login Card -->
         <div class="card">
             
             <!-- Logo & Title -->
@@ -198,7 +193,7 @@
             </div>
             
             <!-- Login Form -->
-            <form id="loginForm">
+            <form id="loginForm" onsubmit="return false;">
                 <div class="form-group">
                     <label>
                         <i class="fas fa-envelope"></i>Email
@@ -208,6 +203,7 @@
                         id="email" 
                         required 
                         placeholder="your@email.com"
+                        autocomplete="email"
                     >
                 </div>
                 
@@ -220,18 +216,17 @@
                         id="password" 
                         required 
                         placeholder="Enter password"
+                        autocomplete="current-password"
                     >
                 </div>
                 
-                <button type="submit" class="btn" id="loginBtn">
+                <button type="button" class="btn" id="loginBtn" onclick="handleLogin()">
                     <i class="fas fa-sign-in-alt"></i>Sign In
                 </button>
             </form>
             
             <!-- Error Message -->
-            <div id="errorMessage" class="error-message">
-                <!-- Error text will appear here -->
-            </div>
+            <div id="errorMessage" class="error-message"></div>
             
             <!-- HIPAA Notice -->
             <div class="notice">
@@ -246,24 +241,55 @@
         </div>
     </div>
 
+    <!-- Load Supabase BEFORE our script -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script>
-        // ✅ Supabase configuration
-        const SUPABASE_URL = 'https://kunwpqvijlbpmfagbsgw.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDUyMzAsImV4cCI6MjA4NzY2MTIzMH0.hJYdgtQMUIYmj-3BXOncD3JnnrhBSM3WVNR1qlEzGkw';
+        console.log('🔵 Script started');
+        console.log('🔵 Supabase available?', typeof window.supabase);
         
-        // ✅ Create client ONCE
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Wait for Supabase to load
+        function initializeApp() {
+            if (typeof window.supabase === 'undefined') {
+                console.log('⏳ Waiting for Supabase...');
+                setTimeout(initializeApp, 100);
+                return;
+            }
+            
+            console.log('✅ Supabase loaded');
+            
+            // Supabase configuration
+            const SUPABASE_URL = 'https://kunwpqvijlbpmfagbsgw.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDUyMzAsImV4cCI6MjA4NzY2MTIzMH0.hJYdgtQMUIYmj-3BXOncD3JnnrhBSM3WVNR1qlEzGkw';
+            
+            // Create client
+            window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+            console.log('✅ Supabase client initialized');
+            
+            // Check if user is already logged in
+            window.supabaseClient.auth.getSession().then(({ data: { session } }) => {
+                if (session) {
+                    console.log('✅ Already logged in, redirecting...');
+                    window.location.href = 'recovery-nm-dashboard.html';
+                }
+            });
+        }
         
-        console.log('✅ Supabase client initialized');
-        
-        // ✅ Handle login form
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // Handle login
+        async function handleLogin() {
+            console.log('🔐 Login button clicked');
             
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMessage');
             const loginBtn = document.getElementById('loginBtn');
+            
+            if (!email || !password) {
+                errorDiv.textContent = 'Please enter both email and password';
+                errorDiv.classList.add('show');
+                return;
+            }
             
             // Hide any previous errors
             errorDiv.classList.remove('show');
@@ -277,8 +303,12 @@
             try {
                 console.log('🔐 Attempting login for:', email);
                 
-                // ✅ Call Supabase auth
-                const { data, error } = await supabase.auth.signInWithPassword({
+                if (!window.supabaseClient) {
+                    throw new Error('Supabase client not initialized');
+                }
+                
+                // Call Supabase auth
+                const { data, error } = await window.supabaseClient.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
@@ -290,7 +320,7 @@
                 
                 console.log('✅ Login successful!', data);
                 
-                // ✅ Redirect to dashboard
+                // Redirect to dashboard
                 window.location.href = 'recovery-nm-dashboard.html';
                 
             } catch (error) {
@@ -300,13 +330,15 @@
                 loginBtn.innerHTML = originalText;
                 loginBtn.disabled = false;
             }
-        });
+        }
         
-        // ✅ Check if user is already logged in
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            if (session) {
-                console.log('✅ Already logged in, redirecting...');
-                window.location.href = 'recovery-nm-dashboard.html';
+        // Start the app
+        initializeApp();
+        
+        // Also allow Enter key to submit
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin();
             }
         });
     </script>
