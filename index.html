@@ -62,54 +62,35 @@
     </div>
     
     <script>
-        // Supabase Configuration
         const SUPABASE_URL = 'https://kunwpqvijlbpmfagbsgw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDUyMzAsImV4cCI6MjA4NzY2MTIzMH0.hJYdgtQMUIYmj-3BXOncD3JnnrhBSM3WVNR1qlEzGkw';
-        
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        // Login Form Handler
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMessage');
-            
             errorDiv.classList.add('hidden');
-            
             const button = e.target.querySelector('button');
             const originalText = button.innerHTML;
             button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing in...';
             button.disabled = true;
             
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
-                
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
-                
-                console.log('✅ Login successful!');
                 window.location.href = 'recovery-nm-dashboard.html';
-                
             } catch (error) {
-                console.error('❌ Login error:', error);
                 errorDiv.textContent = error.message || 'Login failed. Please check your credentials.';
                 errorDiv.classList.remove('hidden');
-                
                 button.innerHTML = originalText;
                 button.disabled = false;
             }
         });
         
-        // Check if already logged in
         supabase.auth.getSession().then(({ data: { session } }) => {
-            if (session) {
-                console.log('✅ Already logged in, redirecting...');
-                window.location.href = 'recovery-nm-dashboard.html';
-            }
+            if (session) window.location.href = 'recovery-nm-dashboard.html';
         });
     </script>
 </body>
