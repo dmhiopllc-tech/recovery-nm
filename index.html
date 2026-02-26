@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recovery NM - Login</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- ✅ FIXED: Use link instead of script for Tailwind (no production warning) -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.0/dist/tailwind.min.css" rel="stylesheet">
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <style>
@@ -61,7 +64,7 @@
     
     <script>
         const SUPABASE_URL = 'https://kunwpqvijlbpmfagbsgw.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDUyMzAsImV4cCI6MjA4NzYyMTIzMH0.hJYdgtQMUIYmj-3BXOncD3JnnrhBSM3WVNR1qlEzGkw';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDUyMzAsImV4cCI6MjA4NzY2MTIzMH0.hJYdgtQMUIYmj-3BXOncD3JnnrhBSM3WVNR1qlEzGkw';
         
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
@@ -95,6 +98,12 @@
                 
                 button.innerHTML = originalText;
                 button.disabled = false;
+            }
+        });
+        
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                window.location.href = 'recovery-nm-dashboard.html';
             }
         });
     </script>
