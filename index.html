@@ -18,10 +18,10 @@
     <div class="w-full max-w-md p-8">
         <div class="bg-white rounded-lg shadow-lg p-8">
             <div class="text-center mb-8">
-                <!-- Logo - Replace with your logo URL -->
-                <img src="https://www.genspark.ai/api/files/s/xzmkGUph" alt="Recovery NM Logo" class="h-20 mx-auto mb-4">
+                <!-- Your Recovery NM Logo with red/green chiles -->
+                <img src="https://www.genspark.ai/api/files/s/xzmkGUph" alt="Recovery NM Logo" class="h-32 mx-auto mb-4">
                 <h1 class="text-3xl font-bold text-burgundy mb-2">Recovery NM</h1>
-                <p class="text-gray-600">Scholarship Management System</p>
+                <p class="text-sm font-semibold" style="color: #7CB342;">HELPING NM HEAL</p>
             </div>
             
             <form id="loginForm" class="space-y-4">
@@ -61,12 +61,10 @@
     </div>
     
     <script>
-        // Supabase Configuration - ONLY DECLARED ONCE
         const SUPABASE_URL = 'https://kunwpqvijlbpmfagbsgw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDUyMzAsImV4cCI6MjA4NzY2MTIzMH0.hJYdgtQMUIYmj-3BXOncD3JnnrhBSM3WVNR1qlEzGkw';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        // Login Form Handler
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
@@ -92,10 +90,9 @@
             }
         });
         
-        // Check if already logged in
         supabase.auth.getSession().then(({ data: { session } }) => {
             if (session) {
-                console.log('✅ Already logged in, redirecting...');
+                console.log('✅ Already logged in');
                 window.location.href = 'recovery-nm-dashboard.html';
             }
         });
