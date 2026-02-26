@@ -39,6 +39,7 @@
 </head>
 <body>
     
+    <!-- Header -->
     <header class="bg-burgundy shadow-2xl border-b-4 border-gold">
         <div class="max-w-7xl mx-auto px-4 py-4">
             <div class="logo-container">
@@ -57,6 +58,7 @@
         </div>
     </header>
 
+    <!-- Navigation -->
     <nav class="bg-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4">
             <div class="flex space-x-2 overflow-x-auto">
@@ -74,6 +76,8 @@
     </nav>
 
     <div class="max-w-7xl mx-auto p-4 mt-4">
+        
+        <!-- Dashboard Tab -->
         <div id="content-dashboard" class="tab-content active">
             <div class="bg-white rounded-lg shadow-lg p-6">
                 <h2 class="text-2xl font-bold text-burgundy mb-4">
@@ -85,30 +89,41 @@
                         <p class="text-4xl font-bold">$0</p>
                     </div>
                     <div class="bg-gradient-to-r from-green-400 to-green-600 rounded-lg p-6 text-white">
-                        <h3 class="text-lg font-semibold mb-2">Scholarships</h3>
+                        <h3 class="text-lg font-semibold mb-2">Scholarships Awarded</h3>
                         <p class="text-4xl font-bold">0</p>
                     </div>
                     <div class="bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg p-6 text-white">
-                        <h3 class="text-lg font-semibold mb-2">Balance</h3>
+                        <h3 class="text-lg font-semibold mb-2">Available Balance</h3>
                         <p class="text-4xl font-bold">$0</p>
                     </div>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-lg font-bold text-burgundy mb-4">Recent Activity</h3>
+                    <p class="text-gray-600">No recent activity</p>
                 </div>
             </div>
         </div>
 
+        <!-- Donations Tab -->
         <div id="content-donations" class="tab-content">
             <div class="bg-white rounded-lg shadow-lg p-6">
-                <h2 class="text-2xl font-bold text-burgundy mb-4">Donations</h2>
-                <p class="text-gray-600">No donations yet</p>
+                <h2 class="text-2xl font-bold text-burgundy mb-4">
+                    <i class="fas fa-hand-holding-usd mr-2"></i>Donation Management
+                </h2>
+                <p class="text-gray-600">No donations recorded yet</p>
             </div>
         </div>
 
+        <!-- Scholarships Tab -->
         <div id="content-scholarships" class="tab-content">
             <div class="bg-white rounded-lg shadow-lg p-6">
-                <h2 class="text-2xl font-bold text-burgundy mb-4">Scholarships</h2>
-                <p class="text-gray-600">No scholarships yet</p>
+                <h2 class="text-2xl font-bold text-burgundy mb-4">
+                    <i class="fas fa-graduation-cap mr-2"></i>Scholarship Management
+                </h2>
+                <p class="text-gray-600">No scholarships created yet</p>
             </div>
         </div>
+
     </div>
 
     <script>
@@ -116,6 +131,9 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDUyMzAsImV4cCI6MjA4NzY2MTIzMH0.hJYdgtQMUIYmj-3BXOncD3JnnrhBSM3WVNR1qlEzGkw';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
+        let currentUser = null;
+        
+        // Check authentication on page load
         document.addEventListener('DOMContentLoaded', async function() {
             const { data: { session } } = await supabase.auth.getSession();
             
@@ -124,7 +142,8 @@
                 return;
             }
             
-            document.getElementById('userName').textContent = session.user.email;
+            currentUser = session.user;
+            document.getElementById('userName').textContent = currentUser.email;
         });
 
         function showTab(tabName) {
@@ -140,7 +159,7 @@
         }
 
         async function handleLogout() {
-            if (confirm('Logout?')) {
+            if (confirm('Are you sure you want to logout?')) {
                 await supabase.auth.signOut();
                 window.location.href = 'index.html';
             }
