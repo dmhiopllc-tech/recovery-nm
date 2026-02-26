@@ -768,17 +768,17 @@
     </div>
 
     <!-- Load Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@db/db-js@2"></script>
 
     <!-- Application JavaScript -->
     <script>
         // ========================================
         // CONFIGURATION
         // ========================================
-        const SUPABASE_URL = 'https://kunwpqvijlbpmfagbsgw.supabase.co';
+        const SUPABASE_URL = 'https://kunwpqvijlbpmfagbsgw.db.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDUyMzAsImV4cCI6MjA4NzYyMTIzMH0.hJYdgtQMUIYmj-3BXOncD3JnnrhBSM3WVNR1qlEzGkw';
 
-        let supabase;
+        let db;
         let currentUser = null;
 
         // ========================================
@@ -788,11 +788,11 @@
             console.log('🚀 Recovery NM Scholarship Management System');
             
             // Initialize Supabase client
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            db = window.db.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             console.log('✅ Supabase client initialized');
 
             // Check authentication
-            const { data: { session } } = await supabase.auth.getSession();
+            const { data: { session } } = await db.auth.getSession();
             if (!session) {
                 window.location.href = 'recovery-nm-login-BULLETPROOF.html';
                 return;
@@ -819,7 +819,7 @@
         // ========================================
         async function loadCurrentUser() {
             try {
-                const { data: { user } } = await supabase.auth.getUser();
+                const { data: { user } } = await db.auth.getUser();
                 
                 if (!user) {
                     window.location.href = 'recovery-nm-login-BULLETPROOF.html';
@@ -827,7 +827,7 @@
                 }
 
                 // Load user profile
-                const { data: profile, error } = await supabase
+                const { data: profile, error } = await db
                     .from('users')
                     .select('*')
                     .eq('email', user.email)
@@ -847,7 +847,7 @@
                 }
                 
                 // Update last login
-                await supabase
+                await db
                     .from('users')
                     .update({ last_login: new Date().toISOString() })
                     .eq('id', currentUser.id);
@@ -865,7 +865,7 @@
                     timestamp: new Date().toISOString()
                 });
                 
-                await supabase.auth.signOut();
+                await db.auth.signOut();
                 window.location.href = 'recovery-nm-login-BULLETPROOF.html';
             }
         }
@@ -964,7 +964,7 @@
         async function loadDashboardData() {
             try {
                 // Load financial summary
-                const { data: summary, error } = await supabase
+                const { data: summary, error } = await db
                     .from('financial_summary')
                     .select('*')
                     .single();
@@ -990,7 +990,7 @@
 
         async function loadPendingApprovals() {
             try {
-                const { data: approvals, error } = await supabase
+                const { data: approvals, error } = await db
                     .from('pending_scholarships')
                     .select('*')
                     .order('created_at', { ascending: false });
@@ -1049,7 +1049,7 @@
 
         async function loadRecentActivity() {
             try {
-                const { data: activities, error } = await supabase
+                const { data: activities, error } = await db
                     .from('audit_log')
                     .select('*')
                     .order('created_at', { ascending: false })
@@ -1100,7 +1100,7 @@
         // ========================================
         async function loadClients() {
             try {
-                const { data: clients, error } = await supabase
+                const { data: clients, error } = await db
                     .from('clients')
                     .select('*')
                     .eq('active', true)
@@ -1206,7 +1206,7 @@
             };
 
             try {
-                const { data, error } = await supabase
+                const { data, error } = await db
                     .from('clients')
                     .insert([clientData])
                     .select()
@@ -1231,7 +1231,7 @@
         // ========================================
         async function loadDonations() {
             try {
-                const { data: donations, error } = await supabase
+                const { data: donations, error } = await db
                     .from('donations')
                     .select('*')
                     .order('donation_date', { ascending: false });
@@ -1364,7 +1364,7 @@
             };
 
             try {
-                const { data, error } = await supabase
+                const { data, error } = await db
                     .from('donations')
                     .insert([donationData])
                     .select()
@@ -1390,7 +1390,7 @@
         // ========================================
         async function loadScholarships() {
             try {
-                const { data: scholarships, error } = await supabase
+                const { data: scholarships, error } = await db
                     .from('scholarships')
                     .select(`
                         *,
@@ -1453,8 +1453,8 @@
             try {
                 // Load clients and treatment centers
                 const [clientsResult, centersResult] = await Promise.all([
-                    supabase.from('clients').select('*').eq('active', true),
-                    supabase.from('treatment_centers').select('*').eq('active', true)
+                    db.from('clients').select('*').eq('active', true),
+                    db.from('treatment_centers').select('*').eq('active', true)
                 ]);
 
                 if (clientsResult.error) throw clientsResult.error;
@@ -1550,7 +1550,7 @@
             };
 
             try {
-                const { data, error } = await supabase
+                const { data, error } = await db
                     .from('scholarships')
                     .insert([scholarshipData])
                     .select()
@@ -1576,7 +1576,7 @@
 
             try {
                 // Add approval record
-                const { error: approvalError } = await supabase
+                const { error: approvalError } = await db
                     .from('scholarship_approvals')
                     .insert([{
                         scholarship_id: scholarshipId,
@@ -1588,7 +1588,7 @@
                 if (approvalError) throw approvalError;
 
                 // Get current approval count
-                const { data: scholarship, error: fetchError } = await supabase
+                const { data: scholarship, error: fetchError } = await db
                     .from('scholarships')
                     .select('approval_count')
                     .eq('id', scholarshipId)
@@ -1600,7 +1600,7 @@
                 const newStatus = newCount >= 2 ? 'approved' : 'pending';
 
                 // Update scholarship
-                const { error: updateError } = await supabase
+                const { error: updateError } = await db
                     .from('scholarships')
                     .update({
                         approval_count: newCount,
@@ -1636,7 +1636,7 @@
 
                 switch (reportType) {
                     case 'financial':
-                        const { data: financial } = await supabase
+                        const { data: financial } = await db
                             .from('financial_summary')
                             .select('*')
                             .single();
@@ -1647,7 +1647,7 @@
                         break;
 
                     case 'donations':
-                        const { data: donations } = await supabase
+                        const { data: donations } = await db
                             .from('donations')
                             .select('*')
                             .order('donation_date', { ascending: false });
@@ -1658,7 +1658,7 @@
                         break;
 
                     case 'scholarships':
-                        const { data: scholarships } = await supabase
+                        const { data: scholarships } = await db
                             .from('scholarships')
                             .select('*')
                             .order('award_date', { ascending: false });
@@ -1669,7 +1669,7 @@
                         break;
 
                     case 'audit':
-                        const { data: audit } = await supabase
+                        const { data: audit } = await db
                             .from('audit_log')
                             .select('*')
                             .order('created_at', { ascending: false })
@@ -1723,7 +1723,7 @@
             }
 
             try {
-                const { data: users, error } = await supabase
+                const { data: users, error } = await db
                     .from('users')
                     .select('*')
                     .order('created_at', { ascending: false });
@@ -1824,7 +1824,7 @@
             };
 
             try {
-                const { data, error } = await supabase
+                const { data, error } = await db
                     .from('users')
                     .insert([userData])
                     .select()
@@ -1849,7 +1849,7 @@
         // ========================================
         async function logAudit(action, resourceType, resourceId, details) {
             try {
-                await supabase
+                await db
                     .from('audit_log')
                     .insert([{
                         user_id: currentUser?.id,
