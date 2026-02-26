@@ -4,27 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recovery NM - Login</title>
-    
-    <!-- Using Tailwind Play CDN (more reliable) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    
-    <!-- Tailwind Config to suppress warning -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        burgundy: '#5C0F2E',
-                        gold: '#F4D03F'
-                    }
-                }
-            }
-        }
-    </script>
-    
     <style>
         .bg-burgundy { background-color: #5C0F2E; }
         .text-burgundy { color: #5C0F2E; }
@@ -36,9 +18,8 @@
     <div class="w-full max-w-md p-8">
         <div class="bg-white rounded-lg shadow-lg p-8">
             <div class="text-center mb-8">
-                <div class="w-20 h-20 bg-burgundy rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-hands-helping text-gold text-4xl"></i>
-                </div>
+                <!-- Logo - Replace with your logo URL -->
+                <img src="https://www.genspark.ai/api/files/s/xzmkGUph" alt="Recovery NM Logo" class="h-20 mx-auto mb-4">
                 <h1 class="text-3xl font-bold text-burgundy mb-2">Recovery NM</h1>
                 <p class="text-gray-600">Scholarship Management System</p>
             </div>
@@ -80,10 +61,12 @@
     </div>
     
     <script>
+        // Supabase Configuration - ONLY DECLARED ONCE
         const SUPABASE_URL = 'https://kunwpqvijlbpmfagbsgw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDUyMzAsImV4cCI6MjA4NzY2MTIzMH0.hJYdgtQMUIYmj-3BXOncD3JnnrhBSM3WVNR1qlEzGkw';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
+        // Login Form Handler
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value.trim();
@@ -98,8 +81,10 @@
             try {
                 const { data, error } = await supabase.auth.signInWithPassword({ email, password });
                 if (error) throw error;
+                console.log('✅ Login successful!', data);
                 window.location.href = 'recovery-nm-dashboard.html';
             } catch (error) {
+                console.error('❌ Login error:', error);
                 errorDiv.textContent = error.message || 'Login failed. Please check your credentials.';
                 errorDiv.classList.remove('hidden');
                 button.innerHTML = originalText;
@@ -107,8 +92,12 @@
             }
         });
         
+        // Check if already logged in
         supabase.auth.getSession().then(({ data: { session } }) => {
-            if (session) window.location.href = 'recovery-nm-dashboard.html';
+            if (session) {
+                console.log('✅ Already logged in, redirecting...');
+                window.location.href = 'recovery-nm-dashboard.html';
+            }
         });
     </script>
 </body>
