@@ -4,9 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recovery NM - Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.0/dist/tailwind.min.css" rel="stylesheet">
+    
+    <!-- Using Tailwind Play CDN (more reliable) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
+    <!-- Tailwind Config to suppress warning -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        burgundy: '#5C0F2E',
+                        gold: '#F4D03F'
+                    }
+                }
+            }
+        }
+    </script>
+    
     <style>
         .bg-burgundy { background-color: #5C0F2E; }
         .text-burgundy { color: #5C0F2E; }
