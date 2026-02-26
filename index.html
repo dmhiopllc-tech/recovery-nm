@@ -5,102 +5,243 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recovery NM - Login</title>
     
-    <!-- ✅ Use Tailwind via prebuilt CSS (no CDN warning) -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.0/dist/tailwind.min.css" rel="stylesheet">
-    
-    <!-- ✅ Load Supabase ONCE -->
+    <!-- ✅ Load Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <!-- ✅ Font Awesome -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     
+    <!-- ✅ INLINE CSS - No external Tailwind needed -->
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         :root {
             --burgundy: #5C0F2E;
             --gold: #F4D03F;
             --green: #7CB342;
         }
+        
         body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, var(--burgundy) 0%, #3a0a1c 100%);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
         }
-        .brand-gold { color: var(--gold); }
-        .brand-green { color: var(--green); }
-        .btn-gold {
-            background-color: var(--gold);
-            color: var(--burgundy);
+        
+        .container {
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 3rem;
+        }
+        
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            height: 120px;
+            width: auto;
+            margin-bottom: 1rem;
+        }
+        
+        .title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 0.875rem;
+            color: var(--green);
+            letter-spacing: 0.1em;
             font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        
+        label i {
+            margin-right: 0.5rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid #D1D5DB;
+            border-radius: 8px;
+            font-size: 1rem;
             transition: all 0.3s;
         }
-        .btn-gold:hover {
+        
+        input:focus {
+            outline: none;
+            border-color: var(--burgundy);
+            box-shadow: 0 0 0 3px rgba(92, 15, 46, 0.1);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background-color: var(--gold);
+            color: var(--burgundy);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn:hover {
             background-color: #f5e056;
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(244, 208, 63, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .error-message {
+            display: none;
+            margin-top: 1rem;
+            padding: 0.875rem;
+            background-color: #FEE2E2;
+            border: 1px solid #DC2626;
+            color: #991B1B;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .notice {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6B7280;
+        }
+        
+        .notice p {
+            margin-bottom: 0.25rem;
+        }
+        
+        .footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .card {
+                padding: 2rem;
+            }
+            
+            .logo {
+                height: 100px;
+            }
+            
+            .title {
+                font-size: 1.75rem;
+            }
         }
     </style>
 </head>
-<body class="flex items-center justify-center">
+<body>
     
-    <div class="w-full max-w-md p-8">
+    <div class="container">
         <!-- Login Card -->
-        <div class="bg-white rounded-lg shadow-2xl p-8">
+        <div class="card">
             
             <!-- Logo & Title -->
-            <div class="text-center mb-8">
-                <img src="https://www.genspark.ai/api/files/s/xzmkGUph" alt="Recovery NM Logo" class="h-32 mx-auto mb-4">
-                <h1 class="text-3xl font-bold brand-gold mb-2">RECOVERY NM</h1>
-                <p class="text-sm brand-green tracking-wider">HELPING NM HEAL</p>
+            <div class="logo-section">
+                <img src="https://www.genspark.ai/api/files/s/xzmkGUph" alt="Recovery NM Logo" class="logo">
+                <h1 class="title">RECOVERY NM</h1>
+                <p class="subtitle">HELPING NM HEAL</p>
             </div>
             
             <!-- Login Form -->
-            <form id="loginForm" class="space-y-4">
-                <div>
-                    <label class="block font-semibold text-gray-700 mb-2">
-                        <i class="fas fa-envelope mr-2"></i>Email
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-envelope"></i>Email
                     </label>
                     <input 
                         type="email" 
                         id="email" 
                         required 
-                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none" 
                         placeholder="your@email.com"
                     >
                 </div>
                 
-                <div>
-                    <label class="block font-semibold text-gray-700 mb-2">
-                        <i class="fas fa-lock mr-2"></i>Password
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-lock"></i>Password
                     </label>
                     <input 
                         type="password" 
                         id="password" 
                         required 
-                        class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-burgundy focus:outline-none" 
                         placeholder="Enter password"
                     >
                 </div>
                 
-                <button 
-                    type="submit" 
-                    class="w-full btn-gold py-3 rounded-lg font-semibold"
-                >
-                    <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                <button type="submit" class="btn" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i>Sign In
                 </button>
             </form>
             
             <!-- Error Message -->
-            <div id="errorMessage" class="hidden mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+            <div id="errorMessage" class="error-message">
                 <!-- Error text will appear here -->
             </div>
             
             <!-- HIPAA Notice -->
-            <div class="mt-6 text-center text-sm text-gray-600">
-                <p>HIPAA-Compliant System</p>
-                <p class="mt-1">Authorized Users Only</p>
+            <div class="notice">
+                <p><strong>HIPAA-Compliant System</strong></p>
+                <p>Authorized Users Only</p>
             </div>
         </div>
         
         <!-- Footer -->
-        <div class="mt-6 text-center text-xs text-gray-300">
+        <div class="footer">
             <p>&copy; 2026 Recovery NM. All rights reserved.</p>
         </div>
     </div>
@@ -110,10 +251,10 @@
         const SUPABASE_URL = 'https://kunwpqvijlbpmfagbsgw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDUyMzAsImV4cCI6MjA4NzY2MTIzMH0.hJYdgtQMUIYmj-3BXOncD3JnnrhBSM3WVNR1qlEzGkw';
         
-        // ✅ Create client ONCE (no duplicate declaration)
+        // ✅ Create client ONCE
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        console.log('✅ Supabase client initialized:', supabase);
+        console.log('✅ Supabase client initialized');
         
         // ✅ Handle login form
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -122,15 +263,16 @@
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMessage');
+            const loginBtn = document.getElementById('loginBtn');
             
             // Hide any previous errors
-            errorDiv.classList.add('hidden');
+            errorDiv.classList.remove('show');
+            errorDiv.textContent = '';
             
             // Show loading state
-            const button = e.target.querySelector('button');
-            const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing in...';
-            button.disabled = true;
+            const originalText = loginBtn.innerHTML;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>Signing in...';
+            loginBtn.disabled = true;
             
             try {
                 console.log('🔐 Attempting login for:', email);
@@ -154,9 +296,9 @@
             } catch (error) {
                 console.error('❌ Login failed:', error);
                 errorDiv.textContent = error.message || 'Login failed. Please check your credentials.';
-                errorDiv.classList.remove('hidden');
-                button.innerHTML = originalText;
-                button.disabled = false;
+                errorDiv.classList.add('show');
+                loginBtn.innerHTML = originalText;
+                loginBtn.disabled = false;
             }
         });
         
