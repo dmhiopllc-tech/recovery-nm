@@ -903,22 +903,45 @@
                                     <th>Scholarship ID</th>
                                     <th>🔒 Client ID</th>
                                     <th>Center</th>
+                                    <th>Insurance</th>
                                     <th>Amount</th>
                                     <th>Status</th>
                                     <th>Date Approved</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                ${scholarships.map(s => `
+                                ${scholarships.map(s => {
+                                    let insuranceIcon = '';
+                                    let insuranceText = '';
+                                    switch(s.insurance_situation) {
+                                        case 'full_ride':
+                                            insuranceIcon = '✅';
+                                            insuranceText = 'Full Ride';
+                                            break;
+                                        case 'high_out_of_pocket':
+                                            insuranceIcon = '💰';
+                                            insuranceText = 'High OOP';
+                                            break;
+                                        case 'no_coverage':
+                                            insuranceIcon = '❌';
+                                            insuranceText = 'No Coverage';
+                                            break;
+                                        default:
+                                            insuranceIcon = '❓';
+                                            insuranceText = 'Unknown';
+                                    }
+                                    return `
                                     <tr>
                                         <td>${s.scholarship_id}</td>
                                         <td><strong>${s.clients ? s.clients.client_identifier : 'N/A'}</strong></td>
                                         <td>${s.treatment_centers ? s.treatment_centers.center_name : 'N/A'}</td>
+                                        <td>${insuranceIcon} ${insuranceText}</td>
                                         <td>${formatCurrency(s.amount)}</td>
                                         <td><span class="badge badge-${s.status === 'approved' ? 'approved' : 'pending'}">${s.status.toUpperCase()}</span></td>
                                         <td>${s.approved_date ? new Date(s.approved_date).toLocaleDateString() : '-'}</td>
                                     </tr>
-                                `).join('')}
+                                    `;
+                                }).join('')}
                             </tbody>
                         </table>
                     `;
@@ -956,11 +979,28 @@
                     case 'scholarships':
                         // HIPAA COMPLIANT REPORT
                         const { data: scholarships } = await client
-                            .from('approved_scholarships_report')
-                            .select('*');
-                        data = scholarships || [];
+                            .from('scholarships')
+                            .select(`
+                                scholarship_id,
+                                amount,
+                                approved_date,
+                                insurance_situation,
+                                clients (client_identifier)
+                            `)
+                            .eq('status', 'approved')
+                            .order('approved_date', { ascending: false });
+                        
+                        // Format for HIPAA compliance - only identifiers, no names
+                        data = scholarships ? scholarships.map(s => ({
+                            client_id: s.clients?.client_identifier || 'N/A',
+                            amount: s.amount,
+                            insurance: s.insurance_situation,
+                            date_approved: s.approved_date,
+                            scholarship_id: s.scholarship_id
+                        })) : [];
+                        
                         filename = 'scholarships_HIPAA_compliant.csv';
-                        headers = ['client_id', 'amount', 'date_approved', 'scholarship_id'];
+                        headers = ['client_id', 'amount', 'insurance', 'date_approved', 'scholarship_id'];
                         
                         // Audit log
                         await client.from('audit_log').insert({
@@ -1122,8 +1162,128 @@
             showError('Add Donation feature - Coming in next update');
         };
         
-        window.showAddScholarshipModal = function() {
-            showError('Add Scholarship feature - Coming in next update');
+        window.showAddScholarshipModal = async function() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Load active clients
+            const { data: clients } = await client
+                .from('clients')
+                .select('id, client_identifier')
+                .eq('is_active', true)
+                .order('created_at', { ascending: false });
+            
+            // Load treatment centers
+            const { data: centers } = await client
+                .from('treatment_centers')
+                .select('id, center_name')
+                .eq('is_active', true)
+                .order('center_name');
+            
+            const clientOptions = clients ? clients.map(c => 
+                `<option value="${c.id}">${c.client_identifier}</option>`
+            ).join('') : '';
+            
+            const centerOptions = centers ? centers.map(c => 
+                `<option value="${c.id}">${c.center_name}</option>`
+            ).join('') : '';
+            
+            createModal('🎓 Add New Scholarship', `
+                <form id="scholarshipForm">
+                    <div class="form-group">
+                        <label class="form-label required">🔒 Select Client</label>
+                        <select class="form-input" name="client_id" required>
+                            <option value="">Select a client...</option>
+                            ${clientOptions}
+                        </select>
+                        <small style="color: #666; font-size: 0.875rem;">Only HIPAA-compliant identifiers shown</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Treatment Center</label>
+                        <select class="form-input" name="treatment_center_id" required>
+                            <option value="">Select a treatment center...</option>
+                            ${centerOptions}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Insurance Situation</label>
+                        <select class="form-input" name="insurance_situation" required>
+                            <option value="">Select insurance situation...</option>
+                            <option value="full_ride">✅ Full Ride (Insurance covers all)</option>
+                            <option value="high_out_of_pocket">💰 High Out-of-Pocket (Partial coverage)</option>
+                            <option value="no_coverage">❌ Center Doesn't Accept Their Insurance</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Scholarship Amount</label>
+                        <input type="number" class="form-input" name="amount" 
+                               min="0" step="0.01" placeholder="5000.00" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Award Date</label>
+                        <input type="date" class="form-input" name="award_date" 
+                               value="${today}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Purpose / Notes</label>
+                        <textarea class="form-input" name="purpose" rows="3" 
+                                  placeholder="E.g., To cover out-of-pocket expenses for 30-day residential program"></textarea>
+                    </div>
+                    
+                    <div class="info-box">
+                        <p>
+                            <i class="fas fa-info-circle"></i> <strong>Status:</strong> 
+                            Scholarship will be created with <strong>PENDING</strong> status and require approval.
+                        </p>
+                    </div>
+                </form>
+            `, async () => {
+                const form = document.getElementById('scholarshipForm');
+                const formData = new FormData(form);
+                
+                try {
+                    // Insert scholarship
+                    const { data: newScholarship, error: insertError } = await client
+                        .from('scholarships')
+                        .insert([{
+                            client_id: formData.get('client_id'),
+                            treatment_center_id: formData.get('treatment_center_id'),
+                            amount: parseFloat(formData.get('amount')),
+                            award_date: formData.get('award_date'),
+                            insurance_situation: formData.get('insurance_situation'),
+                            purpose: formData.get('purpose') || null,
+                            status: 'pending',
+                            created_by: currentUser.id
+                        }])
+                        .select()
+                        .single();
+                    
+                    if (insertError) throw insertError;
+                    
+                    showSuccess(`✅ Scholarship created: ${newScholarship.scholarship_id}`);
+                    closeModal();
+                    loadScholarships();
+                    
+                    // Audit log
+                    await client.from('audit_log').insert({
+                        user_id: currentUser.id,
+                        action: 'CREATE',
+                        resource_type: 'scholarship',
+                        details: { 
+                            scholarship_id: newScholarship.scholarship_id,
+                            amount: formData.get('amount'),
+                            insurance: formData.get('insurance_situation')
+                        }
+                    });
+                    
+                } catch (err) {
+                    showError('Error: ' + err.message);
+                }
+            });
         };
         
         window.showAddUserModal = function() {
