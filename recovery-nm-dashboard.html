@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recovery NM - Scholarship Management System</title>
+    <title>Recovery NM - Scholarship Management Dashboard</title>
     
-    <!-- Load Supabase -->
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.js"></script>
     
     <!-- Font Awesome -->
@@ -63,23 +63,15 @@
             width: auto;
         }
         
-        .header-title {
-            display: flex;
-            flex-direction: column;
-        }
-        
         .header-title h1 {
             color: var(--burgundy);
             font-size: 1.5rem;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
         
         .header-title p {
             color: var(--green);
             font-size: 0.875rem;
-            font-weight: 500;
         }
         
         .header-right {
@@ -102,90 +94,73 @@
             color: var(--text-light);
         }
         
-        .session-timer {
-            background: var(--light-bg);
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            font-size: 0.875rem;
-            color: var(--text-light);
-        }
-        
         .btn-logout {
             background: var(--red-chile);
-            color: var(--white);
+            color: white;
             border: none;
-            padding: 0.5rem 1.5rem;
+            padding: 0.5rem 1rem;
             border-radius: 4px;
             cursor: pointer;
-            font-weight: 500;
-            transition: background 0.3s;
+            font-size: 0.875rem;
         }
         
         .btn-logout:hover {
             background: #B71C1C;
         }
         
-        /* Navigation */
-        .nav-tabs {
-            background: var(--white);
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
             padding: 0 2rem;
+        }
+        
+        /* Tabs */
+        .tabs {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .tab-buttons {
             display: flex;
-            gap: 0.5rem;
-            box-shadow: 0 2px 4px var(--shadow);
+            border-bottom: 2px solid var(--border);
+            background: var(--light-bg);
         }
         
         .tab-btn {
-            background: none;
+            flex: 1;
+            padding: 1rem;
             border: none;
-            padding: 1rem 1.5rem;
+            background: transparent;
             cursor: pointer;
             font-weight: 500;
             color: var(--text-light);
-            border-bottom: 3px solid transparent;
             transition: all 0.3s;
-            position: relative;
-        }
-        
-        .tab-btn:hover {
-            color: var(--burgundy);
-            background: rgba(107, 5, 4, 0.05);
         }
         
         .tab-btn.active {
+            background: white;
             color: var(--burgundy);
-            border-bottom-color: var(--burgundy);
+            border-bottom: 3px solid var(--burgundy);
         }
         
-        .tab-badge {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: var(--red-chile);
-            color: var(--white);
-            font-size: 0.75rem;
-            padding: 0.125rem 0.5rem;
-            border-radius: 10px;
-            font-weight: 600;
+        .tab-btn:hover {
+            background: rgba(107, 5, 4, 0.05);
         }
         
-        /* Main Content */
-        .main-content {
-            padding: 2rem;
-        }
-        
+        /* Tab Content */
         .tab-content {
             display: none;
-            background: var(--white);
-            border-radius: 8px;
             padding: 2rem;
-            box-shadow: 0 4px 6px var(--shadow);
         }
         
         .tab-content.active {
             display: block;
         }
         
-        /* Dashboard Stats */
+        /* Stats Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -194,94 +169,42 @@
         }
         
         .stat-card {
-            background: linear-gradient(135deg, var(--burgundy), #8B1010);
-            color: var(--white);
+            background: white;
             padding: 1.5rem;
             border-radius: 8px;
-            box-shadow: 0 4px 6px var(--shadow);
+            box-shadow: 0 2px 4px var(--shadow);
+            border-left: 4px solid var(--burgundy);
         }
         
-        .stat-card.gold {
-            background: linear-gradient(135deg, var(--gold), #FFC700);
-            color: var(--text-dark);
-        }
-        
-        .stat-card.green {
-            background: linear-gradient(135deg, var(--green), #1B7016);
-        }
-        
-        .stat-label {
+        .stat-card h3 {
             font-size: 0.875rem;
-            opacity: 0.9;
+            color: var(--text-light);
             margin-bottom: 0.5rem;
         }
         
-        .stat-value {
+        .stat-card .stat-value {
             font-size: 2rem;
             font-weight: 700;
-        }
-        
-        /* Section Headers */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
             color: var(--burgundy);
         }
         
         /* Buttons */
         .btn-primary {
-            background: var(--burgundy);
-            color: var(--white);
+            background: var(--green);
+            color: white;
             border: none;
             padding: 0.75rem 1.5rem;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 0.875rem;
             font-weight: 500;
-            transition: background 0.3s;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
         }
         
         .btn-primary:hover {
-            background: #8B1010;
-        }
-        
-        .btn-secondary {
-            background: var(--text-light);
-            color: var(--white);
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-        
-        .btn-secondary:hover {
-            background: #555555;
-        }
-        
-        .btn-success {
-            background: var(--green);
-            color: var(--white);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-        
-        .btn-success:hover {
-            background: #1B7016;
+            background: #1B7019;
         }
         
         /* Tables */
@@ -305,37 +228,8 @@
             border-bottom: 1px solid var(--border);
         }
         
-        .data-table tbody tr:hover {
-            background: rgba(107, 5, 4, 0.05);
-        }
-        
-        /* Status Badges */
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-        
-        .badge-pending {
-            background: #FFF3CD;
-            color: #856404;
-        }
-        
-        .badge-approved {
-            background: #D4EDDA;
-            color: #155724;
-        }
-        
-        .badge-disbursed {
-            background: #D1ECF1;
-            color: #0C5460;
-        }
-        
-        .badge-rejected {
-            background: #F8D7DA;
-            color: #721C24;
+        .data-table tr:hover {
+            background: var(--light-bg);
         }
         
         /* Modal */
@@ -357,20 +251,17 @@
         }
         
         .modal-content {
-            background: var(--white);
+            background: white;
             border-radius: 8px;
+            max-width: 500px;
             width: 90%;
-            max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 8px 16px var(--shadow);
         }
         
         .modal-header {
-            background: var(--burgundy);
-            color: var(--white);
             padding: 1.5rem;
-            border-radius: 8px 8px 0 0;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -379,28 +270,32 @@
         .modal-title {
             font-size: 1.25rem;
             font-weight: 600;
+            color: var(--burgundy);
         }
         
         .modal-close {
             background: none;
             border: none;
-            color: var(--white);
             font-size: 1.5rem;
             cursor: pointer;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            color: var(--text-light);
         }
         
         .modal-body {
             padding: 1.5rem;
         }
         
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        /* Form */
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
         
         .form-label {
@@ -411,62 +306,66 @@
         }
         
         .form-label.required::after {
-            content: " *";
+            content: ' *';
             color: var(--red-chile);
         }
         
-        .form-input,
-        .form-select,
-        .form-textarea {
+        .form-input, .form-textarea, .form-select {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid var(--border);
             border-radius: 4px;
             font-family: inherit;
-            font-size: 1rem;
+            font-size: 0.875rem;
         }
         
-        .form-input:focus,
-        .form-select:focus,
-        .form-textarea:focus {
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
             outline: none;
             border-color: var(--burgundy);
-            box-shadow: 0 0 0 3px rgba(107, 5, 4, 0.1);
         }
         
         .form-textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 80px;
         }
         
-        .modal-footer {
-            padding: 1.5rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-        }
-        
-        /* Alert Messages */
-        .alert {
-            padding: 1rem 1.5rem;
+        /* Info Box */
+        .info-box {
+            padding: 1rem;
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
             border-radius: 4px;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            margin-top: 1rem;
         }
         
-        .alert-success {
-            background: #D4EDDA;
-            color: #155724;
-            border-left: 4px solid #28A745;
+        .info-box p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: #1e40af;
         }
         
-        .alert-error {
-            background: #F8D7DA;
-            color: #721C24;
-            border-left: 4px solid #DC3545;
+        /* Badge */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .badge-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .badge-pending {
+            background: #fed7aa;
+            color: #92400e;
+        }
+        
+        .badge-rejected {
+            background: #fecaca;
+            color: #991b1b;
         }
         
         /* Empty State */
@@ -482,38 +381,39 @@
             opacity: 0.5;
         }
         
-        .hidden {
-            display: none !important;
+        /* Alert */
+        .alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px var(--shadow);
+            z-index: 2000;
+            animation: slideIn 0.3s ease-out;
         }
         
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 1rem;
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
             }
-            
-            .header-right {
-                width: 100%;
-                justify-content: space-between;
+            to {
+                transform: translateX(0);
+                opacity: 1;
             }
-            
-            .nav-tabs {
-                overflow-x: auto;
-                padding: 0 1rem;
-            }
-            
-            .main-content {
-                padding: 1rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .tab-content {
-                padding: 1rem;
-            }
+        }
+        
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+        
+        .alert-error {
+            background: #fecaca;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
         }
     </style>
 </head>
@@ -521,10 +421,10 @@
     <!-- Header -->
     <div class="header">
         <div class="header-left">
-            <img src="recovery_logo.jpg" alt="Recovery NM Logo" class="logo">
+            <img src="recovery_logo.jpg" alt="Recovery NM" class="logo">
             <div class="header-title">
                 <h1>Recovery NM</h1>
-                <p>Helping NM Heal</p>
+                <p>🔒 HIPAA-Compliant Scholarship Management</p>
             </div>
         </div>
         <div class="header-right">
@@ -532,136 +432,131 @@
                 <div class="user-name" id="userName">Loading...</div>
                 <div class="user-role" id="userRole"></div>
             </div>
-            <div class="session-timer">
-                <i class="fas fa-clock"></i>
-                <span id="timerDisplay">30:00</span>
-            </div>
-            <button class="btn-logout" id="logoutBtn">
+            <button class="btn-logout" onclick="logout()">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </button>
         </div>
     </div>
 
-    <!-- Navigation Tabs -->
-    <div class="nav-tabs">
-        <button class="tab-btn active" data-tab="dashboard">
-            <i class="fas fa-tachometer-alt"></i> Dashboard
-        </button>
-        <button class="tab-btn" data-tab="clients">
-            <i class="fas fa-users"></i> Clients
-        </button>
-        <button class="tab-btn" data-tab="donations">
-            <i class="fas fa-hand-holding-heart"></i> Donations
-        </button>
-        <button class="tab-btn" data-tab="scholarships">
-            <i class="fas fa-graduation-cap"></i> Scholarships
-            <span class="tab-badge" id="pendingBadge">0</span>
-        </button>
-        <button class="tab-btn" data-tab="reports">
-            <i class="fas fa-chart-bar"></i> Reports
-        </button>
-        <button class="tab-btn hidden" id="usersTabBtn" data-tab="users">
-            <i class="fas fa-user-shield"></i> Users
-        </button>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Dashboard Tab -->
-        <div id="dashboard" class="tab-content active">
-            <div class="section-header">
-                <h2 class="section-title">Financial Overview</h2>
+    <!-- Main Container -->
+    <div class="container">
+        <div class="tabs">
+            <!-- Tab Buttons -->
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="dashboard">
+                    <i class="fas fa-chart-line"></i> Dashboard
+                </button>
+                <button class="tab-btn" data-tab="clients">
+                    <i class="fas fa-users"></i> Clients
+                </button>
+                <button class="tab-btn" data-tab="donations">
+                    <i class="fas fa-hand-holding-usd"></i> Donations
+                </button>
+                <button class="tab-btn" data-tab="scholarships">
+                    <i class="fas fa-graduation-cap"></i> Scholarships
+                </button>
+                <button class="tab-btn" data-tab="reports">
+                    <i class="fas fa-file-export"></i> Reports
+                </button>
+                <button class="tab-btn" data-tab="users" id="usersTab" style="display: none;">
+                    <i class="fas fa-user-cog"></i> Users
+                </button>
             </div>
-            
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Total Donations</div>
-                    <div class="stat-value" id="totalDonations">$0</div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Donations Received</h3>
+                        <div class="stat-value" id="totalDonations">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Disbursed</h3>
+                        <div class="stat-value" id="totalDisbursed">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Available Balance</h3>
+                        <div class="stat-value" id="availableBalance">$0.00</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Pending Commitments</h3>
+                        <div class="stat-value" id="pendingCommitments">$0.00</div>
+                    </div>
                 </div>
-                <div class="stat-card gold">
-                    <div class="stat-label">Scholarships Awarded</div>
-                    <div class="stat-value" id="totalDisbursed">$0</div>
+                
+                <h3 style="margin-bottom: 1rem;">Recent Activity</h3>
+                <div id="recentActivity"></div>
+            </div>
+
+            <!-- Clients Tab -->
+            <div id="clients" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2>🔒 HIPAA-Compliant Clients</h2>
+                    <button class="btn-primary" onclick="showAddClientModal()">
+                        <i class="fas fa-plus"></i> Add Client
+                    </button>
                 </div>
-                <div class="stat-card green">
-                    <div class="stat-label">Available Balance</div>
-                    <div class="stat-value" id="availableBalance">$0</div>
+                <div id="clientsContainer"></div>
+            </div>
+
+            <!-- Donations Tab -->
+            <div id="donations" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2>Donations</h2>
+                    <button class="btn-primary" onclick="showAddDonationModal()">
+                        <i class="fas fa-plus"></i> Record Donation
+                    </button>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label">Pending Commitments</div>
-                    <div class="stat-value" id="pendingCommitments">$0</div>
+                <div id="donationsContainer"></div>
+            </div>
+
+            <!-- Scholarships Tab -->
+            <div id="scholarships" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2>Scholarships</h2>
+                    <button class="btn-primary" onclick="showAddScholarshipModal()">
+                        <i class="fas fa-plus"></i> Create Scholarship
+                    </button>
+                </div>
+                <div id="scholarshipsContainer"></div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports" class="tab-content">
+                <h2 style="margin-bottom: 1.5rem;">🔒 HIPAA-Compliant Reports</h2>
+                <div style="display: grid; gap: 1rem;">
+                    <button class="btn-primary" data-report="financial">
+                        <i class="fas fa-dollar-sign"></i> Financial Summary
+                    </button>
+                    <button class="btn-primary" data-report="donations">
+                        <i class="fas fa-hand-holding-usd"></i> Donations Report
+                    </button>
+                    <button class="btn-primary" data-report="scholarships">
+                        <i class="fas fa-lock"></i> Scholarships Report (HIPAA Compliant)
+                    </button>
+                    <button class="btn-primary" data-report="audit">
+                        <i class="fas fa-clipboard-list"></i> Audit Log
+                    </button>
+                </div>
+                <div class="info-box" style="margin-top: 2rem;">
+                    <p>
+                        <i class="fas fa-shield-alt"></i> <strong>HIPAA Compliant:</strong> 
+                        Scholarship reports contain ONLY client identifiers (e.g., DSR2162026), 
+                        amounts, and approval dates. No personal health information (PHI) is included.
+                    </p>
                 </div>
             </div>
 
-            <div class="section-header">
-                <h2 class="section-title">Recent Activity</h2>
+            <!-- Users Tab -->
+            <div id="users" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2>User Management</h2>
+                    <button class="btn-primary" onclick="showAddUserModal()">
+                        <i class="fas fa-plus"></i> Add User
+                    </button>
+                </div>
+                <div id="usersContainer"></div>
             </div>
-            <div id="recentActivity"></div>
-        </div>
-
-        <!-- Clients Tab -->
-        <div id="clients" class="tab-content">
-            <div class="section-header">
-                <h2 class="section-title">Client Management</h2>
-                <button class="btn-primary" id="addClientBtn">
-                    <i class="fas fa-plus"></i> Add Client
-                </button>
-            </div>
-            <div id="clientsContainer"></div>
-        </div>
-
-        <!-- Donations Tab -->
-        <div id="donations" class="tab-content">
-            <div class="section-header">
-                <h2 class="section-title">Donation Management</h2>
-                <button class="btn-primary" id="addDonationBtn">
-                    <i class="fas fa-plus"></i> Record Donation
-                </button>
-            </div>
-            <div id="donationsContainer"></div>
-        </div>
-
-        <!-- Scholarships Tab -->
-        <div id="scholarships" class="tab-content">
-            <div class="section-header">
-                <h2 class="section-title">Scholarship Management</h2>
-                <button class="btn-primary" id="addScholarshipBtn">
-                    <i class="fas fa-plus"></i> Award Scholarship
-                </button>
-            </div>
-            <div id="scholarshipsContainer"></div>
-        </div>
-
-        <!-- Reports Tab -->
-        <div id="reports" class="tab-content">
-            <div class="section-header">
-                <h2 class="section-title">Generate Reports</h2>
-            </div>
-            
-            <div style="display: grid; gap: 1rem;">
-                <button class="btn-primary" data-report="financial">
-                    <i class="fas fa-file-invoice-dollar"></i> Financial Summary
-                </button>
-                <button class="btn-primary" data-report="donations">
-                    <i class="fas fa-hand-holding-usd"></i> Donation Report
-                </button>
-                <button class="btn-primary" data-report="scholarships">
-                    <i class="fas fa-graduation-cap"></i> Scholarship Report
-                </button>
-                <button class="btn-primary" data-report="audit">
-                    <i class="fas fa-clipboard-list"></i> Audit Log
-                </button>
-            </div>
-        </div>
-
-        <!-- Users Tab (Super Admin Only) -->
-        <div id="users" class="tab-content">
-            <div class="section-header">
-                <h2 class="section-title">User Management</h2>
-                <button class="btn-primary" id="addUserBtn">
-                    <i class="fas fa-plus"></i> Add User
-                </button>
-            </div>
-            <div id="usersContainer"></div>
         </div>
     </div>
 
@@ -676,14 +571,12 @@
         // Initialize Supabase
         const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let currentUser = null;
-        let sessionTimer = null;
-        let sessionTimeRemaining = 30 * 60;
         
         // Initialize app
         document.addEventListener('DOMContentLoaded', init);
         
         async function init() {
-            console.log('🚀 Recovery NM Scholarship Management System');
+            console.log('🚀 Recovery NM - HIPAA Compliant System');
             
             try {
                 // Check auth
@@ -697,85 +590,63 @@
                 await loadUser();
                 
                 // Setup UI
-                setupEventListeners();
-                startSessionTimer();
+                setupTabs();
+                setupReportButtons();
                 
                 // Load initial data
-                await loadDashboard();
+                loadDashboard();
                 
-                console.log('✅ Dashboard initialized');
             } catch (error) {
-                console.error('Initialization error:', error);
-                showError('Failed to initialize dashboard');
+                console.error('Init error:', error);
+                showError('Failed to initialize application');
             }
         }
         
         async function loadUser() {
-            const { data: { user } } = await client.auth.getUser();
-            if (!user) {
-                window.location.href = 'index.html';
-                return;
-            }
-            
-            const { data: profile } = await client
-                .from('users')
-                .select('*')
-                .eq('email', user.email)
-                .single();
-            
-            currentUser = { ...user, ...profile };
-            
-            document.getElementById('userName').textContent = currentUser.full_name || 'User';
-            document.getElementById('userRole').textContent = (currentUser.role || 'user').replace('_', ' ').toUpperCase();
-            
-            if (currentUser.role === 'super_admin') {
-                document.getElementById('usersTabBtn').classList.remove('hidden');
+            try {
+                const { data: { user } } = await client.auth.getUser();
+                if (!user) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                currentUser = user;
+                document.getElementById('userName').textContent = user.email;
+                document.getElementById('userRole').textContent = user.user_metadata?.role || 'User';
+                
+                // Show users tab for super admins
+                if (user.user_metadata?.role === 'super_admin') {
+                    document.getElementById('usersTab').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading user:', error);
             }
         }
         
-        function setupEventListeners() {
-            // Logout
-            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
-            
-            // Tab navigation
+        function setupTabs() {
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
+                    // Remove active class from all
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active to clicked
+                    btn.classList.add('active');
                     const tabName = btn.dataset.tab;
-                    showTab(tabName);
+                    document.getElementById(tabName).classList.add('active');
+                    
+                    // Load tab data
+                    loadTabData(tabName);
                 });
             });
-            
-            // Add buttons
-            document.getElementById('addClientBtn').addEventListener('click', showAddClientModal);
-            document.getElementById('addDonationBtn').addEventListener('click', showAddDonationModal);
-            document.getElementById('addScholarshipBtn').addEventListener('click', showAddScholarshipModal);
-            document.getElementById('addUserBtn').addEventListener('click', showAddUserModal);
-            
-            // Report buttons
+        }
+        
+        function setupReportButtons() {
             document.querySelectorAll('[data-report]').forEach(btn => {
                 btn.addEventListener('click', () => {
                     generateReport(btn.dataset.report);
                 });
             });
-        }
-        
-        function showTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Remove active from buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Show selected tab
-            document.getElementById(tabName).classList.add('active');
-            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
-            
-            // Load data for tab
-            loadTabData(tabName);
         }
         
         async function loadTabData(tabName) {
@@ -793,7 +664,7 @@
                     await loadScholarships();
                     break;
                 case 'users':
-                    if (currentUser.role === 'super_admin') {
+                    if (currentUser.user_metadata?.role === 'super_admin') {
                         await loadUsers();
                     }
                     break;
@@ -819,30 +690,36 @@
                 const { data: activities } = await client
                     .from('audit_log')
                     .select('*')
-                    .order('created_at', { ascending: false })
+                    .order('timestamp', { ascending: false })
                     .limit(10);
                 
                 const container = document.getElementById('recentActivity');
                 if (activities && activities.length > 0) {
-                    container.innerHTML = activities.map(a => 
-                        `<div style="padding: 0.5rem; border-bottom: 1px solid #eee;">
-                            ${a.action} - ${a.resource_type} (${formatTimeAgo(a.created_at)})
-                        </div>`
-                    ).join('');
+                    container.innerHTML = `
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Action</th>
+                                    <th>Resource</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${activities.map(a => `
+                                    <tr>
+                                        <td>${a.action}</td>
+                                        <td>${a.resource_type}</td>
+                                        <td>${formatTimeAgo(a.timestamp)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
                 } else {
-                    container.innerHTML = '<div class="empty-state"><p>No recent activity</p></div>';
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-clipboard"></i><p>No recent activity</p></div>';
                 }
-                
-                // Update pending badge
-                const { data: pending } = await client
-                    .from('pending_scholarships')
-                    .select('*');
-                
-                document.getElementById('pendingBadge').textContent = pending ? pending.length : 0;
-                
             } catch (error) {
                 console.error('Error loading dashboard:', error);
-                showError('Failed to load dashboard data');
             }
         }
         
@@ -852,7 +729,7 @@
                 const { data: clients } = await client
                     .from('clients')
                     .select('*')
-                    .eq('active', true)
+                    .eq('is_active', true)
                     .order('created_at', { ascending: false });
                 
                 const container = document.getElementById('clientsContainer');
@@ -862,9 +739,7 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Client ID 1</th>
-                                    <th>Client ID 2</th>
-                                    <th>Client ID 3</th>
+                                    <th>🔒 Client Identifier</th>
                                     <th>Notes</th>
                                     <th>Created</th>
                                 </tr>
@@ -872,9 +747,7 @@
                             <tbody>
                                 ${clients.map(c => `
                                     <tr>
-                                        <td>${c.client_id_1}</td>
-                                        <td>${c.client_id_2}</td>
-                                        <td>${c.client_id_3}</td>
+                                        <td><strong>${c.client_identifier}</strong></td>
                                         <td>${c.notes || '-'}</td>
                                         <td>${new Date(c.created_at).toLocaleDateString()}</td>
                                     </tr>
@@ -890,6 +763,79 @@
                 showError('Failed to load clients');
             }
         }
+        
+        // Add Client Modal
+        window.showAddClientModal = function() {
+            const today = new Date().toISOString().split('T')[0];
+            createModal('🔒 Add New Client (HIPAA Compliant)', `
+                <form id="clientForm">
+                    <div class="form-group">
+                        <label class="form-label required">Client Initials (2-3 letters)</label>
+                        <input type="text" class="form-input" name="initials" 
+                               maxlength="3" pattern="[A-Za-z]{2,3}" 
+                               placeholder="DSR" style="text-transform: uppercase" required>
+                        <small style="color: #666; font-size: 0.875rem;">Enter 2-3 initials only (e.g., DSR, JD, ABC)</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Date</label>
+                        <input type="date" class="form-input" name="client_date" 
+                               value="${today}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notes (Optional)</label>
+                        <textarea class="form-input" name="notes" rows="3" 
+                                  placeholder="Internal notes (no PHI)"></textarea>
+                    </div>
+                    <div class="info-box">
+                        <p>
+                            <i class="fas fa-lock"></i> <strong>HIPAA Compliant:</strong> 
+                            System will auto-generate identifier like <strong>DSR2162026</strong><br>
+                            Duplicates automatically get -1, -2, etc. (e.g., <strong>DSR2162026-1</strong>)
+                        </p>
+                    </div>
+                </form>
+            `, async () => {
+                const form = document.getElementById('clientForm');
+                const formData = new FormData(form);
+                
+                try {
+                    // Generate unique identifier
+                    const { data: identifier, error: genError } = await client
+                        .rpc('generate_client_identifier', {
+                            p_initials: formData.get('initials').toUpperCase(),
+                            p_date: formData.get('client_date')
+                        });
+                    
+                    if (genError) throw genError;
+                    
+                    // Insert client
+                    const { error: insertError } = await client
+                        .from('clients')
+                        .insert([{
+                            client_identifier: identifier,
+                            notes: formData.get('notes') || null,
+                            created_by: currentUser.id
+                        }]);
+                    
+                    if (insertError) throw insertError;
+                    
+                    showSuccess(`✅ Client added: ${identifier}`);
+                    closeModal();
+                    loadClients();
+                    
+                    // Audit log
+                    await client.from('audit_log').insert({
+                        user_id: currentUser.id,
+                        action: 'CREATE',
+                        resource_type: 'client',
+                        details: { client_identifier: identifier }
+                    });
+                    
+                } catch (err) {
+                    showError('Error: ' + err.message);
+                }
+            });
+        };
         
         // Donations
         async function loadDonations() {
@@ -916,7 +862,7 @@
                             <tbody>
                                 ${donations.map(d => `
                                     <tr>
-                                        <td>${d.donation_id || 'N/A'}</td>
+                                        <td>${d.donation_id}</td>
                                         <td>${d.donor_name}</td>
                                         <td>${formatCurrency(d.amount)}</td>
                                         <td>${new Date(d.donation_date).toLocaleDateString()}</td>
@@ -927,7 +873,7 @@
                         </table>
                     `;
                 } else {
-                    container.innerHTML = '<div class="empty-state"><i class="fas fa-hand-holding-heart"></i><p>No donations recorded</p></div>';
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-hand-holding-usd"></i><p>No donations recorded</p></div>';
                 }
             } catch (error) {
                 console.error('Error loading donations:', error);
@@ -942,7 +888,7 @@
                     .from('scholarships')
                     .select(`
                         *,
-                        clients (client_id_1, client_id_2, client_id_3),
+                        clients (client_identifier),
                         treatment_centers (center_name)
                     `)
                     .order('created_at', { ascending: false });
@@ -955,299 +901,34 @@
                             <thead>
                                 <tr>
                                     <th>Scholarship ID</th>
-                                    <th>Client IDs</th>
-                                    <th>Treatment Center</th>
+                                    <th>🔒 Client ID</th>
+                                    <th>Center</th>
                                     <th>Amount</th>
                                     <th>Status</th>
-                                    <th>Award Date</th>
+                                    <th>Date Approved</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 ${scholarships.map(s => `
                                     <tr>
-                                        <td>${s.scholarship_id || 'N/A'}</td>
-                                        <td>${s.clients ? `${s.clients.client_id_1}/${s.clients.client_id_2}/${s.clients.client_id_3}` : 'N/A'}</td>
+                                        <td>${s.scholarship_id}</td>
+                                        <td><strong>${s.clients ? s.clients.client_identifier : 'N/A'}</strong></td>
                                         <td>${s.treatment_centers ? s.treatment_centers.center_name : 'N/A'}</td>
                                         <td>${formatCurrency(s.amount)}</td>
-                                        <td><span class="badge badge-${s.status}">${s.status}</span></td>
-                                        <td>${new Date(s.award_date).toLocaleDateString()}</td>
+                                        <td><span class="badge badge-${s.status === 'approved' ? 'approved' : 'pending'}">${s.status.toUpperCase()}</span></td>
+                                        <td>${s.approved_date ? new Date(s.approved_date).toLocaleDateString() : '-'}</td>
                                     </tr>
                                 `).join('')}
                             </tbody>
                         </table>
                     `;
                 } else {
-                    container.innerHTML = '<div class="empty-state"><i class="fas fa-graduation-cap"></i><p>No scholarships awarded</p></div>';
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-graduation-cap"></i><p>No scholarships found</p></div>';
                 }
             } catch (error) {
                 console.error('Error loading scholarships:', error);
                 showError('Failed to load scholarships');
             }
-        }
-        
-        // Users
-        async function loadUsers() {
-            try {
-                const { data: users } = await client
-                    .from('users')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
-                const container = document.getElementById('usersContainer');
-                
-                if (users && users.length > 0) {
-                    container.innerHTML = `
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Full Name</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
-                                    <th>Active</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${users.map(u => `
-                                    <tr>
-                                        <td>${u.full_name}</td>
-                                        <td>${u.email}</td>
-                                        <td><span class="badge badge-${u.role === 'super_admin' ? 'approved' : 'pending'}">${u.role.replace('_', ' ').toUpperCase()}</span></td>
-                                        <td>${u.active ? '✅' : '❌'}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    `;
-                } else {
-                    container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>No users found</p></div>';
-                }
-            } catch (error) {
-                console.error('Error loading users:', error);
-                showError('Failed to load users');
-            }
-        }
-        
-        // Modals
-        function showAddClientModal() {
-            const modal = createModal('Add New Client', `
-                <form id="clientForm">
-                    <div class="form-group">
-                        <label class="form-label required">Client ID 1</label>
-                        <input type="text" class="form-input" name="client_id_1" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label required">Client ID 2</label>
-                        <input type="text" class="form-input" name="client_id_2" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label required">Client ID 3</label>
-                        <input type="text" class="form-input" name="client_id_3" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Notes</label>
-                        <textarea class="form-textarea" name="notes"></textarea>
-                    </div>
-                </form>
-            `, async () => {
-                const form = document.getElementById('clientForm');
-                const formData = new FormData(form);
-                
-                const { error } = await client
-                    .from('clients')
-                    .insert([{
-                        client_id_1: formData.get('client_id_1'),
-                        client_id_2: formData.get('client_id_2'),
-                        client_id_3: formData.get('client_id_3'),
-                        notes: formData.get('notes'),
-                        created_by: currentUser.id
-                    }]);
-                
-                if (error) {
-                    showError(error.message);
-                } else {
-                    showSuccess('Client added successfully');
-                    closeModal();
-                    loadClients();
-                }
-            });
-        }
-        
-        function showAddDonationModal() {
-            const today = new Date().toISOString().split('T')[0];
-            const modal = createModal('Record New Donation', `
-                <form id="donationForm">
-                    <div class="form-group">
-                        <label class="form-label required">Donor Name</label>
-                        <input type="text" class="form-input" name="donor_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label required">Amount</label>
-                        <input type="number" class="form-input" name="amount" min="0" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label required">Date</label>
-                        <input type="date" class="form-input" name="donation_date" value="${today}" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label required">Type</label>
-                        <select class="form-select" name="donation_type" required>
-                            <option value="">Select...</option>
-                            <option value="cash">Cash</option>
-                            <option value="check">Check</option>
-                            <option value="credit_card">Credit Card</option>
-                            <option value="ach">ACH</option>
-                            <option value="wire">Wire Transfer</option>
-                        </select>
-                    </div>
-                </form>
-            `, async () => {
-                const form = document.getElementById('donationForm');
-                const formData = new FormData(form);
-                
-                const { error } = await client
-                    .from('donations')
-                    .insert([{
-                        donor_name: formData.get('donor_name'),
-                        amount: parseFloat(formData.get('amount')),
-                        donation_date: formData.get('donation_date'),
-                        donation_type: formData.get('donation_type'),
-                        created_by: currentUser.id
-                    }]);
-                
-                if (error) {
-                    showError(error.message);
-                } else {
-                    showSuccess('Donation recorded successfully');
-                    closeModal();
-                    loadDonations();
-                    loadDashboard();
-                }
-            });
-        }
-        
-        async function showAddScholarshipModal() {
-            try {
-                const [clientsResult, centersResult] = await Promise.all([
-                    client.from('clients').select('*').eq('active', true),
-                    client.from('treatment_centers').select('*').eq('active', true)
-                ]);
-                
-                const clients = clientsResult.data || [];
-                const centers = centersResult.data || [];
-                const today = new Date().toISOString().split('T')[0];
-                
-                createModal('Award New Scholarship', `
-                    <form id="scholarshipForm">
-                        <div class="form-group">
-                            <label class="form-label required">Client</label>
-                            <select class="form-select" name="client_id" required>
-                                <option value="">Select Client...</option>
-                                ${clients.map(c => `
-                                    <option value="${c.id}">${c.client_id_1}/${c.client_id_2}/${c.client_id_3}</option>
-                                `).join('')}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label required">Treatment Center</label>
-                            <select class="form-select" name="treatment_center_id" required>
-                                <option value="">Select Center...</option>
-                                ${centers.map(c => `
-                                    <option value="${c.id}">${c.center_name}</option>
-                                `).join('')}
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label required">Amount</label>
-                            <input type="number" class="form-input" name="amount" min="0" step="0.01" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label required">Award Date</label>
-                            <input type="date" class="form-input" name="award_date" value="${today}" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label required">Insurance Situation</label>
-                            <select class="form-select" name="insurance_situation" required>
-                                <option value="">Select...</option>
-                                <option value="no_insurance">No Insurance</option>
-                                <option value="insurance_exhausted">Insurance Exhausted</option>
-                                <option value="gap_coverage">Gap Coverage</option>
-                            </select>
-                        </div>
-                    </form>
-                `, async () => {
-                    const form = document.getElementById('scholarshipForm');
-                    const formData = new FormData(form);
-                    
-                    const { error } = await client
-                        .from('scholarships')
-                        .insert([{
-                            client_id: formData.get('client_id'),
-                            treatment_center_id: formData.get('treatment_center_id'),
-                            amount: parseFloat(formData.get('amount')),
-                            award_date: formData.get('award_date'),
-                            insurance_situation: formData.get('insurance_situation'),
-                            status: 'pending',
-                            approval_count: 0,
-                            created_by: currentUser.id
-                        }]);
-                    
-                    if (error) {
-                        showError(error.message);
-                    } else {
-                        showSuccess('Scholarship awarded successfully');
-                        closeModal();
-                        loadScholarships();
-                        loadDashboard();
-                    }
-                });
-            } catch (error) {
-                showError('Failed to load form data');
-            }
-        }
-        
-        function showAddUserModal() {
-            createModal('Add New User', `
-                <form id="userForm">
-                    <div class="form-group">
-                        <label class="form-label required">Full Name</label>
-                        <input type="text" class="form-input" name="full_name" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label required">Email</label>
-                        <input type="email" class="form-input" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label required">Role</label>
-                        <select class="form-select" name="role" required>
-                            <option value="">Select...</option>
-                            <option value="super_admin">Super Admin</option>
-                            <option value="admin">Admin</option>
-                            <option value="staff">Staff</option>
-                        </select>
-                    </div>
-                </form>
-            `, async () => {
-                const form = document.getElementById('userForm');
-                const formData = new FormData(form);
-                
-                const { error } = await client
-                    .from('users')
-                    .insert([{
-                        full_name: formData.get('full_name'),
-                        email: formData.get('email'),
-                        role: formData.get('role'),
-                        active: true,
-                        created_by: currentUser.id
-                    }]);
-                
-                if (error) {
-                    showError(error.message);
-                } else {
-                    showSuccess('User added successfully');
-                    closeModal();
-                    loadUsers();
-                }
-            });
         }
         
         // Reports
@@ -1264,29 +945,45 @@
                         filename = 'financial_summary.csv';
                         headers = ['total_donations', 'total_disbursed', 'available_balance', 'pending_commitments'];
                         break;
+                        
                     case 'donations':
                         const { data: donations } = await client.from('donations').select('*');
                         data = donations;
                         filename = 'donations_report.csv';
                         headers = ['donation_id', 'donor_name', 'amount', 'donation_date', 'donation_type'];
                         break;
+                        
                     case 'scholarships':
-                        const { data: scholarships } = await client.from('scholarships').select('*');
-                        data = scholarships;
-                        filename = 'scholarships_report.csv';
-                        headers = ['scholarship_id', 'amount', 'award_date', 'status'];
+                        // HIPAA COMPLIANT REPORT
+                        const { data: scholarships } = await client
+                            .from('approved_scholarships_report')
+                            .select('*');
+                        data = scholarships || [];
+                        filename = 'scholarships_HIPAA_compliant.csv';
+                        headers = ['client_id', 'amount', 'date_approved', 'scholarship_id'];
+                        
+                        // Audit log
+                        await client.from('audit_log').insert({
+                            user_id: currentUser.id,
+                            action: 'REPORT_DOWNLOAD',
+                            resource_type: 'scholarships_hipaa',
+                            details: { row_count: data.length }
+                        });
                         break;
+                        
                     case 'audit':
-                        const { data: audit } = await client.from('audit_log').select('*').limit(1000);
+                        const { data: audit } = await client.from('audit_log').select('*').order('timestamp', { ascending: false }).limit(1000);
                         data = audit;
                         filename = 'audit_log.csv';
-                        headers = ['created_at', 'action', 'resource_type'];
+                        headers = ['timestamp', 'action', 'resource_type'];
                         break;
                 }
                 
                 downloadCSV(data, headers, filename);
-                showSuccess('Report generated successfully');
+                showSuccess('✅ Report generated successfully');
+                
             } catch (error) {
+                console.error('Error generating report:', error);
                 showError('Failed to generate report');
             }
         }
@@ -1306,6 +1003,48 @@
             URL.revokeObjectURL(url);
         }
         
+        // Users
+        async function loadUsers() {
+            try {
+                const { data: users } = await client
+                    .from('users')
+                    .select('*')
+                    .order('full_name');
+                
+                const container = document.getElementById('usersContainer');
+                
+                if (users && users.length > 0) {
+                    container.innerHTML = `
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Active</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${users.map(u => `
+                                    <tr>
+                                        <td>${u.full_name}</td>
+                                        <td>${u.email}</td>
+                                        <td><span class="badge badge-${u.role === 'super_admin' ? 'approved' : 'pending'}">${u.role.replace('_', ' ').toUpperCase()}</span></td>
+                                        <td>${u.is_active ? '✅' : '❌'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                } else {
+                    container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>No users found</p></div>';
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+                showError('Failed to load users');
+            }
+        }
+        
         // Modal helpers
         function createModal(title, bodyHTML, onSubmit) {
             const modalHTML = `
@@ -1317,15 +1056,15 @@
                         </div>
                         <div class="modal-body">${bodyHTML}</div>
                         <div class="modal-footer">
-                            <button class="btn-secondary" onclick="window.closeModal()">Cancel</button>
-                            <button class="btn-primary" id="submitBtn">Submit</button>
+                            <button class="btn-primary" style="background: #999;" onclick="window.closeModal()">Cancel</button>
+                            <button class="btn-primary" onclick="window.submitModal()">Submit</button>
                         </div>
                     </div>
                 </div>
             `;
             
             document.body.insertAdjacentHTML('beforeend', modalHTML);
-            document.getElementById('submitBtn').addEventListener('click', onSubmit);
+            window.modalSubmitHandler = onSubmit;
         }
         
         window.closeModal = function() {
@@ -1333,89 +1072,64 @@
             if (modal) modal.remove();
         };
         
-        // Session timer
-        function startSessionTimer() {
-            updateTimerDisplay();
-            
-            sessionTimer = setInterval(() => {
-                sessionTimeRemaining--;
-                updateTimerDisplay();
-                
-                if (sessionTimeRemaining === 5 * 60) {
-                    alert('⚠️ Session will expire in 5 minutes');
-                }
-                
-                if (sessionTimeRemaining <= 0) {
-                    clearInterval(sessionTimer);
-                    handleLogout();
-                }
-            }, 1000);
-            
-            ['mousedown', 'keydown'].forEach(event => {
-                document.addEventListener(event, resetSessionTimer);
-            });
-        }
-        
-        function resetSessionTimer() {
-            sessionTimeRemaining = 30 * 60;
-        }
-        
-        function updateTimerDisplay() {
-            const minutes = Math.floor(sessionTimeRemaining / 60);
-            const seconds = sessionTimeRemaining % 60;
-            document.getElementById('timerDisplay').textContent = 
-                `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        }
-        
-        // Logout
-        async function handleLogout() {
-            if (confirm('Are you sure you want to logout?')) {
-                await client.auth.signOut();
-                window.location.href = 'index.html';
+        window.submitModal = function() {
+            if (window.modalSubmitHandler) {
+                window.modalSubmitHandler();
             }
-        }
+        };
         
-        // Utilities
+        // Helpers
         function formatCurrency(amount) {
             return new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD'
-            }).format(amount || 0);
+            }).format(amount);
         }
         
         function formatTimeAgo(timestamp) {
             const seconds = Math.floor((new Date() - new Date(timestamp)) / 1000);
             if (seconds < 60) return 'Just now';
-            const minutes = Math.floor(seconds / 60);
-            if (minutes < 60) return `${minutes}m ago`;
-            const hours = Math.floor(minutes / 60);
-            if (hours < 24) return `${hours}h ago`;
-            return `${Math.floor(hours / 24)}d ago`;
+            if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+            if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+            return `${Math.floor(seconds / 86400)}d ago`;
         }
         
         function showSuccess(message) {
-            const alert = document.createElement('div');
-            alert.className = 'alert alert-success';
-            alert.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-            document.querySelector('.main-content').insertBefore(
-                alert, 
-                document.querySelector('.main-content').firstChild
-            );
-            setTimeout(() => alert.remove(), 5000);
+            showAlert(message, 'success');
         }
         
         function showError(message) {
-            const alert = document.createElement('div');
-            alert.className = 'alert alert-error';
-            alert.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
-            document.querySelector('.main-content').insertBefore(
-                alert, 
-                document.querySelector('.main-content').firstChild
-            );
-            setTimeout(() => alert.remove(), 5000);
+            showAlert(message, 'error');
         }
         
-        console.log('💚 Recovery NM - Helping New Mexico Heal');
+        function showAlert(message, type) {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            document.body.appendChild(alert);
+            
+            setTimeout(() => alert.remove(), 3000);
+        }
+        
+        // Logout
+        window.logout = async function() {
+            await client.auth.signOut();
+            window.location.href = 'index.html';
+        };
+        
+        // Placeholder modals
+        window.showAddDonationModal = function() {
+            showError('Add Donation feature - Coming in next update');
+        };
+        
+        window.showAddScholarshipModal = function() {
+            showError('Add Scholarship feature - Coming in next update');
+        };
+        
+        window.showAddUserModal = function() {
+            showError('Add User feature - Coming in next update');
+        };
+        
     })();
     </script>
 </body>
