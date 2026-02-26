@@ -3,167 +3,410 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recovery NM - Scholarship Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>Recovery NM - Dashboard</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         :root {
             --burgundy: #5C0F2E;
             --gold: #F4D03F;
             --green: #7CB342;
         }
+        
         body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, var(--burgundy) 0%, #3a0a1c 100%);
             min-height: 100vh;
+            padding: 2rem;
         }
-        .logo-container {
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo-section {
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 1rem;
         }
-        .brand-gold { color: var(--gold); }
-        .brand-green { color: var(--green); }
-        .bg-burgundy { background-color: var(--burgundy); }
-        .border-gold { border-color: var(--gold); }
-        .btn-gold {
-            background-color: var(--gold);
-            color: var(--burgundy);
+        
+        .logo {
+            height: 80px;
+        }
+        
+        .brand-text h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+        
+        .brand-text p {
+            font-size: 0.875rem;
+            color: var(--green);
+            letter-spacing: 0.1em;
             font-weight: 600;
         }
-        .btn-gold:hover { background-color: #f5e056; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        
+        .user-info {
+            text-align: right;
+        }
+        
+        .user-email {
+            color: var(--burgundy);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn-logout {
+            background-color: var(--gold);
+            color: var(--burgundy);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-logout:hover {
+            background-color: #f5e056;
+            transform: translateY(-2px);
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #6B7280;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background-color: var(--gold);
+            color: var(--burgundy);
+            border-color: var(--gold);
+        }
+        
+        .tab-btn:hover {
+            border-color: var(--gold);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--gold);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            font-size: 0.875rem;
+            color: #6B7280;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--burgundy);
+        }
+        
+        .welcome-message {
+            background: linear-gradient(135deg, var(--burgundy), #7a1a3d);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .welcome-message h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--gold);
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .feature-card i {
+            font-size: 3rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            color: var(--burgundy);
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-card p {
+            color: #6B7280;
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .user-info {
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
     
-    <!-- Header -->
-    <header class="bg-burgundy shadow-2xl border-b-4 border-gold">
-        <div class="max-w-7xl mx-auto px-4 py-4">
-            <div class="logo-container">
-                <img src="https://www.genspark.ai/api/files/s/xzmkGUph" alt="Recovery NM" style="height: 80px;">
-                <div class="text-center">
-                    <h1 class="text-3xl font-bold brand-gold">RECOVERY NM</h1>
-                    <p class="text-sm brand-green tracking-wider">HELPING NM HEAL</p>
-                </div>
-            </div>
-            <div class="mt-4 flex justify-between items-center">
-                <p class="text-gold text-sm" id="userName">Loading...</p>
-                <button onclick="handleLogout()" class="text-gold hover:text-white text-sm font-semibold transition-colors">
-                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex space-x-2 overflow-x-auto">
-                <button onclick="showTab('dashboard')" id="tab-dashboard" class="tab-btn px-4 py-3 font-semibold text-burgundy border-b-4 border-gold whitespace-nowrap">
-                    <i class="fas fa-home mr-2"></i>Dashboard
-                </button>
-                <button onclick="showTab('donations')" id="tab-donations" class="tab-btn px-4 py-3 font-semibold text-gray-600 hover:text-burgundy border-b-4 border-transparent whitespace-nowrap">
-                    <i class="fas fa-hand-holding-usd mr-2"></i>Donations
-                </button>
-                <button onclick="showTab('scholarships')" id="tab-scholarships" class="tab-btn px-4 py-3 font-semibold text-gray-600 hover:text-burgundy border-b-4 border-transparent whitespace-nowrap">
-                    <i class="fas fa-graduation-cap mr-2"></i>Scholarships
-                </button>
-            </div>
-        </div>
-    </nav>
-
-    <div class="max-w-7xl mx-auto p-4 mt-4">
-        
-        <!-- Dashboard Tab -->
-        <div id="content-dashboard" class="tab-content active">
-            <div class="bg-white rounded-lg shadow-lg p-6">
-                <h2 class="text-2xl font-bold text-burgundy mb-4">
-                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-lg p-6 text-white">
-                        <h3 class="text-lg font-semibold mb-2">Total Donations</h3>
-                        <p class="text-4xl font-bold">$0</p>
-                    </div>
-                    <div class="bg-gradient-to-r from-green-400 to-green-600 rounded-lg p-6 text-white">
-                        <h3 class="text-lg font-semibold mb-2">Scholarships Awarded</h3>
-                        <p class="text-4xl font-bold">0</p>
-                    </div>
-                    <div class="bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg p-6 text-white">
-                        <h3 class="text-lg font-semibold mb-2">Available Balance</h3>
-                        <p class="text-4xl font-bold">$0</p>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <div class="logo-section">
+                    <img src="https://www.genspark.ai/api/files/s/xzmkGUph" alt="Recovery NM" class="logo">
+                    <div class="brand-text">
+                        <h1>RECOVERY NM</h1>
+                        <p>HELPING NM HEAL</p>
                     </div>
                 </div>
-                <div class="mt-6">
-                    <h3 class="text-lg font-bold text-burgundy mb-4">Recent Activity</h3>
-                    <p class="text-gray-600">No recent activity</p>
+                <div class="user-info">
+                    <div class="user-email" id="userEmail">Loading...</div>
+                    <button class="btn-logout" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
                 </div>
             </div>
-        </div>
-
-        <!-- Donations Tab -->
-        <div id="content-donations" class="tab-content">
-            <div class="bg-white rounded-lg shadow-lg p-6">
-                <h2 class="text-2xl font-bold text-burgundy mb-4">
-                    <i class="fas fa-hand-holding-usd mr-2"></i>Donation Management
+            
+            <div class="nav-tabs">
+                <button class="tab-btn active" onclick="showTab('dashboard')">
+                    <i class="fas fa-home"></i> Dashboard
+                </button>
+                <button class="tab-btn" onclick="showTab('donations')">
+                    <i class="fas fa-hand-holding-usd"></i> Donations
+                </button>
+                <button class="tab-btn" onclick="showTab('scholarships')">
+                    <i class="fas fa-graduation-cap"></i> Scholarships
+                </button>
+                <button class="tab-btn" onclick="showTab('reports')">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </button>
+            </div>
+            
+            <!-- Dashboard Tab -->
+            <div id="tab-dashboard" class="tab-content active">
+                <div class="welcome-message">
+                    <h2>Welcome to Recovery NM</h2>
+                    <p>Scholarship Management System</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3><i class="fas fa-hand-holding-usd"></i> Total Donations</h3>
+                        <p>$0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3><i class="fas fa-graduation-cap"></i> Scholarships Awarded</h3>
+                        <p>$0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3><i class="fas fa-wallet"></i> Available Balance</h3>
+                        <p>$0</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3><i class="fas fa-clock"></i> Pending Approvals</h3>
+                        <p>0</p>
+                    </div>
+                </div>
+                
+                <div class="feature-list">
+                    <div class="feature-card">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <h3>Track Donations</h3>
+                        <p>Manage all incoming donations from individuals, foundations, and grants</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h3>Award Scholarships</h3>
+                        <p>Process scholarship applications and track disbursements</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>Generate Reports</h3>
+                        <p>View detailed analytics and export financial reports</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Donations Tab -->
+            <div id="tab-donations" class="tab-content">
+                <h2 style="color: var(--burgundy); margin-bottom: 1rem;">
+                    <i class="fas fa-hand-holding-usd"></i> Donation Management
                 </h2>
-                <p class="text-gray-600">No donations recorded yet</p>
+                <p style="color: #6B7280;">Donation tracking features coming soon...</p>
+            </div>
+            
+            <!-- Scholarships Tab -->
+            <div id="tab-scholarships" class="tab-content">
+                <h2 style="color: var(--burgundy); margin-bottom: 1rem;">
+                    <i class="fas fa-graduation-cap"></i> Scholarship Management
+                </h2>
+                <p style="color: #6B7280;">Scholarship management features coming soon...</p>
+            </div>
+            
+            <!-- Reports Tab -->
+            <div id="tab-reports" class="tab-content">
+                <h2 style="color: var(--burgundy); margin-bottom: 1rem;">
+                    <i class="fas fa-chart-bar"></i> Reports & Analytics
+                </h2>
+                <p style="color: #6B7280;">Reporting features coming soon...</p>
             </div>
         </div>
-
-        <!-- Scholarships Tab -->
-        <div id="content-scholarships" class="tab-content">
-            <div class="bg-white rounded-lg shadow-lg p-6">
-                <h2 class="text-2xl font-bold text-burgundy mb-4">
-                    <i class="fas fa-graduation-cap mr-2"></i>Scholarship Management
-                </h2>
-                <p class="text-gray-600">No scholarships created yet</p>
-            </div>
-        </div>
-
     </div>
 
+    <!-- Load Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script>
-        const SUPABASE_URL = 'https://kunwpqvijlbpmfagbsgw.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDUyMzAsImV4cCI6MjA4NzY2MTIzMH0.hJYdgtQMUIYmj-3BXOncD3JnnrhBSM3WVNR1qlEzGkw';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        console.log('🔵 Dashboard loading...');
         
-        let currentUser = null;
+        // Wait for Supabase
+        function initializeApp() {
+            if (typeof window.supabase === 'undefined') {
+                console.log('⏳ Waiting for Supabase...');
+                setTimeout(initializeApp, 100);
+                return;
+            }
+            
+            console.log('✅ Supabase loaded');
+            
+            // Supabase configuration
+            const SUPABASE_URL = 'https://kunwpqvijlbpmfagbsgw.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDUyMzAsImV4cCI6MjA4NzYyMTIzMH0.hJYdgtQMUIYmj-3BXOncD3JnnrhBSM3WVNR1qlEzGkw';
+            
+            window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+            console.log('✅ Supabase client initialized');
+            
+            // Check if user is logged in
+            checkAuth();
+        }
         
-        // Check authentication on page load
-        document.addEventListener('DOMContentLoaded', async function() {
-            const { data: { session } } = await supabase.auth.getSession();
+        async function checkAuth() {
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
             
             if (!session) {
+                console.log('❌ No session found, redirecting to login...');
                 window.location.href = 'index.html';
                 return;
             }
             
-            currentUser = session.user;
-            document.getElementById('userName').textContent = currentUser.email;
-        });
-
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('border-gold', 'text-burgundy');
-                el.classList.add('border-transparent', 'text-gray-600');
-            });
-            
-            document.getElementById('content-' + tabName).classList.add('active');
-            document.getElementById('tab-' + tabName).classList.remove('border-transparent', 'text-gray-600');
-            document.getElementById('tab-' + tabName).classList.add('border-gold', 'text-burgundy');
+            console.log('✅ User authenticated:', session.user.email);
+            document.getElementById('userEmail').textContent = session.user.email;
         }
-
+        
         async function handleLogout() {
-            if (confirm('Are you sure you want to logout?')) {
-                await supabase.auth.signOut();
+            if (!confirm('Are you sure you want to logout?')) return;
+            
+            console.log('🔐 Logging out...');
+            
+            const { error } = await window.supabaseClient.auth.signOut();
+            
+            if (error) {
+                console.error('❌ Logout error:', error);
+                alert('Logout failed: ' + error.message);
+            } else {
+                console.log('✅ Logged out successfully');
                 window.location.href = 'index.html';
             }
         }
+        
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById('tab-' + tabName).classList.add('active');
+            
+            // Highlight button
+            event.target.classList.add('active');
+        }
+        
+        // Start the app
+        initializeApp();
     </script>
 </body>
 </html>
