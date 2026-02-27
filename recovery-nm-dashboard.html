@@ -1383,7 +1383,7 @@
                 
                 try {
                     // Insert scholarship
-                    const { data: newScholarship, error: insertError } = await client
+                    const { data, error: insertError } = await client
                         .from('scholarships')
                         .insert([{
                             client_id: formData.get('client_id'),
@@ -1394,11 +1394,11 @@
                             purpose: formData.get('purpose') || null,
                             status: 'pending'
                         }])
-                        .select('id, scholarship_id, amount, status, created_at')
-                        .single();
+                        .select();
                     
                     if (insertError) throw insertError;
                     
+                    const newScholarship = data[0];
                     showSuccess(`✅ Scholarship created: ${newScholarship.scholarship_id}`);
                     closeModal();
                     loadScholarships();
