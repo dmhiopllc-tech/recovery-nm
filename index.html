@@ -270,9 +270,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.js"></script>
 
     <script>
-        // Initialize Supabase
+        // Initialize Supabase with CORRECT credentials
         const SUPABASE_URL = 'https://kunwpqvijlbpmfagbsgw.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDg4ODI5MjIsImV4cCI6MjAyNDQ1ODkyMn0.xMiRZ7VHVGzKmXP9jS5OGf-1_rXrfPF2xT9xQGVaWlw';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDUyMzAsImV4cCI6MjA4NzYyMTIzMH0.hJYdgtQMUIYmj-3BXOncD3JnnrhBSM3WVNR1qlEzGkw';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const loginForm = document.getElementById('loginForm');
