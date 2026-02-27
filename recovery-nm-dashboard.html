@@ -1159,7 +1159,125 @@
         
         // Placeholder modals
         window.showAddDonationModal = function() {
-            showError('Add Donation feature - Coming in next update');
+            const today = new Date().toISOString().split('T')[0];
+            
+            createModal('💰 Record New Donation', `
+                <form id="donationForm">
+                    <div class="form-group">
+                        <label class="form-label required">Donor Name</label>
+                        <input type="text" class="form-input" name="donor_name" 
+                               placeholder="John Smith or ABC Foundation" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Donation Amount</label>
+                        <input type="number" class="form-input" name="amount" 
+                               min="0" step="0.01" placeholder="1000.00" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Donation Date</label>
+                        <input type="date" class="form-input" name="donation_date" 
+                               value="${today}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label required">Donation Type</label>
+                        <select class="form-input" name="donation_type" required>
+                            <option value="">Select type...</option>
+                            <option value="cash">💵 Cash</option>
+                            <option value="check">📝 Check</option>
+                            <option value="credit_card">💳 Credit Card</option>
+                            <option value="ach">🏦 ACH/Bank Transfer</option>
+                            <option value="wire">📲 Wire Transfer</option>
+                            <option value="other">📦 Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Check Number (if applicable)</label>
+                        <input type="text" class="form-input" name="check_number" 
+                               placeholder="1234">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Donor Email</label>
+                        <input type="email" class="form-input" name="donor_email" 
+                               placeholder="donor@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Donor Phone</label>
+                        <input type="tel" class="form-input" name="donor_phone" 
+                               placeholder="505-123-4567">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-input" name="notes" rows="3" 
+                                  placeholder="Additional donation information..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" name="tax_deductible" checked style="width: auto;">
+                            <span>Tax Deductible (501c3)</span>
+                        </label>
+                    </div>
+                    
+                    <div class="info-box">
+                        <p>
+                            <i class="fas fa-info-circle"></i> <strong>Note:</strong> 
+                            System will auto-generate a donation ID (e.g., DON-2026-001) for tracking.
+                        </p>
+                    </div>
+                </form>
+            `, async () => {
+                const form = document.getElementById('donationForm');
+                const formData = new FormData(form);
+                
+                try {
+                    // Insert donation
+                    const { data: newDonation, error: insertError } = await client
+                        .from('donations')
+                        .insert([{
+                            donor_name: formData.get('donor_name'),
+                            amount: parseFloat(formData.get('amount')),
+                            donation_date: formData.get('donation_date'),
+                            donation_type: formData.get('donation_type'),
+                            check_number: formData.get('check_number') || null,
+                            donor_email: formData.get('donor_email') || null,
+                            donor_phone: formData.get('donor_phone') || null,
+                            notes: formData.get('notes') || null,
+                            tax_deductible: formData.get('tax_deductible') ? true : false,
+                            created_by: currentUser.id
+                        }])
+                        .select()
+                        .single();
+                    
+                    if (insertError) throw insertError;
+                    
+                    showSuccess(`✅ Donation recorded: ${newDonation.donation_id} - ${formatCurrency(newDonation.amount)}`);
+                    closeModal();
+                    loadDonations();
+                    loadDashboard(); // Refresh financial stats
+                    
+                    // Audit log
+                    await client.from('audit_log').insert({
+                        user_id: currentUser.id,
+                        action: 'CREATE',
+                        resource_type: 'donation',
+                        details: { 
+                            donation_id: newDonation.donation_id,
+                            amount: formData.get('amount'),
+                            donor: formData.get('donor_name')
+                        }
+                    });
+                    
+                } catch (err) {
+                    showError('Error: ' + err.message);
+                }
+            });
         };
         
         window.showAddScholarshipModal = async function() {
