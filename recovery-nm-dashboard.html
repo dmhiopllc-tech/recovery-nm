@@ -1392,10 +1392,9 @@
                             award_date: formData.get('award_date'),
                             insurance_situation: formData.get('insurance_situation'),
                             purpose: formData.get('purpose') || null,
-                            status: 'pending',
-                            created_by: currentUser.id
+                            status: 'pending'
                         }])
-                        .select()
+                        .select('id, scholarship_id, amount, status, created_at')
                         .single();
                     
                     if (insertError) throw insertError;
