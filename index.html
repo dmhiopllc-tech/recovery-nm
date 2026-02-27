@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recovery NM - Login</title>
+    
+    <!-- PWA Support -->
+    <meta name="theme-color" content="#6B0504">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Recovery NM">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="recovery_logo.jpg">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -14,7 +23,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #6B0504 0%, #8B1010 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -35,7 +44,7 @@
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(50px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -44,28 +53,31 @@
         }
 
         .login-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #6B0504 0%, #8B1010 100%);
+            color: white;
             padding: 40px 30px;
             text-align: center;
-            color: white;
         }
 
-        .login-header img {
-            max-width: 120px;
-            height: auto;
+        .login-header i {
+            font-size: 60px;
             margin-bottom: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .login-header h1 {
-            font-size: 1.8rem;
+            font-size: 28px;
             margin-bottom: 8px;
-            font-weight: 700;
+            font-weight: 600;
         }
 
         .login-header p {
-            font-size: 0.95rem;
+            font-size: 14px;
             opacity: 0.95;
         }
 
@@ -81,8 +93,8 @@
             display: block;
             margin-bottom: 8px;
             color: #333;
-            font-weight: 600;
-            font-size: 0.95rem;
+            font-weight: 500;
+            font-size: 14px;
         }
 
         .input-wrapper {
@@ -94,45 +106,43 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: #667eea;
-            font-size: 1.1rem;
+            color: #999;
+            font-size: 16px;
         }
 
-        .form-group input {
+        .form-control {
             width: 100%;
             padding: 14px 15px 14px 45px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
-            font-size: 1rem;
+            font-size: 15px;
             transition: all 0.3s ease;
+            font-family: inherit;
         }
 
-        .form-group input:focus {
+        .form-control:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            border-color: #6B0504;
+            box-shadow: 0 0 0 3px rgba(107, 5, 4, 0.1);
         }
 
         .btn-login {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #6B0504 0%, #8B1010 100%);
             color: white;
             border: none;
             border-radius: 10px;
-            font-size: 1.1rem;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            margin-top: 10px;
         }
 
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 25px rgba(107, 5, 4, 0.3);
         }
 
         .btn-login:active {
@@ -140,20 +150,20 @@
         }
 
         .btn-login:disabled {
-            opacity: 0.6;
+            opacity: 0.7;
             cursor: not-allowed;
             transform: none;
         }
 
         .error-message {
             background: #fee;
-            border: 1px solid #fcc;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 20px;
             color: #c33;
-            font-size: 0.9rem;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
             display: none;
+            font-size: 14px;
+            border-left: 4px solid #c33;
         }
 
         .error-message.show {
@@ -167,73 +177,38 @@
             75% { transform: translateX(10px); }
         }
 
-        .success-message {
-            background: #efe;
-            border: 1px solid #cfc;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 20px;
-            color: #363;
-            font-size: 0.9rem;
-            display: none;
-        }
-
-        .success-message.show {
-            display: block;
-        }
-
         .login-footer {
             text-align: center;
-            padding: 20px 30px 30px;
-            border-top: 1px solid #eee;
+            padding: 0 30px 30px;
+            color: #666;
+            font-size: 13px;
         }
 
         .login-footer a {
-            color: #667eea;
+            color: #6B0504;
             text-decoration: none;
-            font-weight: 600;
-            transition: color 0.3s ease;
+            font-weight: 500;
         }
 
         .login-footer a:hover {
-            color: #764ba2;
             text-decoration: underline;
         }
 
-        .loading-spinner {
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top: 3px solid white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            display: none;
-        }
-
-        .btn-login.loading .loading-spinner {
-            display: block;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
         @media (max-width: 480px) {
-            .login-header {
-                padding: 30px 20px;
+            .login-container {
+                margin: 10px;
             }
 
-            .login-header h1 {
-                font-size: 1.5rem;
+            .login-header {
+                padding: 30px 20px;
             }
 
             .login-body {
                 padding: 30px 20px;
             }
 
-            .login-footer {
-                padding: 15px 20px 25px;
+            .login-header h1 {
+                font-size: 24px;
             }
         }
     </style>
@@ -241,14 +216,13 @@
 <body>
     <div class="login-container">
         <div class="login-header">
-            <img src="recovery_logo.jpg" alt="Recovery NM">
-            <h1>🎓 Recovery NM</h1>
-            <p>Helping New Mexico Heal</p>
+            <i class="fas fa-graduation-cap"></i>
+            <h1>Recovery NM</h1>
+            <p>Scholarship Management System</p>
         </div>
 
         <div class="login-body">
             <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage"></div>
 
             <form id="loginForm">
                 <div class="form-group">
@@ -258,10 +232,11 @@
                         <input 
                             type="email" 
                             id="email" 
-                            name="email" 
-                            placeholder="your.email@example.com"
+                            class="form-control" 
+                            placeholder="Enter your email"
                             required
-                            autocomplete="email">
+                            autocomplete="email"
+                        >
                     </div>
                 </div>
 
@@ -272,126 +247,124 @@
                         <input 
                             type="password" 
                             id="password" 
-                            name="password" 
+                            class="form-control" 
                             placeholder="Enter your password"
                             required
-                            autocomplete="current-password">
+                            autocomplete="current-password"
+                        >
                     </div>
                 </div>
 
-                <button type="submit" class="btn-login" id="loginBtn">
-                    <span>Login</span>
-                    <div class="loading-spinner"></div>
+                <button type="submit" class="btn-login" id="loginButton">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
                 </button>
             </form>
         </div>
 
         <div class="login-footer">
-            <p>Don't have an account? <a href="#">Contact Admin</a></p>
+            <p>For technical support, contact your system administrator</p>
         </div>
     </div>
 
-    <!-- Load Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.js"></script>
 
     <script>
-        // ✅ CORRECT SUPABASE CONFIG (key ends in 621230)
+        // Initialize Supabase
         const SUPABASE_URL = 'https://kunwpqvijlbpmfagbsgw.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDUyMzAsImV4cCI6MjA4NzYyMTIzMH0.hJYdgtQMUIYmj-3BXOncD3JnnrhBSM3WVNR1qlEzGkw';
-
-        // Initialize Supabase client using a unique variable name
-        const recoveryNmClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        console.log('🚀 Recovery NM Login Page - v2.0');
-        console.log('✅ Supabase client initialized');
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt1bndwcXZpamxicG1mYWdic2d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDg4ODI5MjIsImV4cCI6MjAyNDQ1ODkyMn0.xMiRZ7VHVGzKmXP9jS5OGf-1_rXrfPF2xT9xQGVaWlw';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const loginForm = document.getElementById('loginForm');
-        const loginBtn = document.getElementById('loginBtn');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginButton = document.getElementById('loginButton');
         const errorMessage = document.getElementById('errorMessage');
-        const successMessage = document.getElementById('successMessage');
 
         // Show error message
         function showError(message) {
             errorMessage.textContent = message;
             errorMessage.classList.add('show');
-            successMessage.classList.remove('show');
             setTimeout(() => {
                 errorMessage.classList.remove('show');
             }, 5000);
         }
 
-        // Show success message
-        function showSuccess(message) {
-            successMessage.textContent = message;
-            successMessage.classList.add('show');
-            errorMessage.classList.remove('show');
-        }
-
-        // Handle login
+        // Handle form submission
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
 
             if (!email || !password) {
                 showError('Please enter both email and password');
                 return;
             }
 
-            // Show loading state
-            loginBtn.disabled = true;
-            loginBtn.classList.add('loading');
-            loginBtn.querySelector('span').textContent = 'Logging in...';
+            // Disable button and show loading state
+            loginButton.disabled = true;
+            loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
 
             try {
-                console.log('🔐 Attempting login for:', email);
-
-                // Sign in with Supabase
-                const { data, error } = await recoveryNmClient.auth.signInWithPassword({
+                // Authenticate with Supabase
+                const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
 
-                if (error) {
-                    console.error('❌ Login error:', error);
-                    throw error;
+                if (authError) {
+                    throw new Error(authError.message);
                 }
 
-                console.log('✅ Login successful!', data);
-                showSuccess('Login successful! Redirecting to dashboard...');
+                if (authData && authData.user) {
+                    // Get user profile to check role
+                    const { data: profile, error: profileError } = await supabase
+                        .from('users')
+                        .select('role, full_name')
+                        .eq('email', email)
+                        .single();
 
-                // Redirect to dashboard after short delay
-                setTimeout(() => {
+                    // Store user info in sessionStorage
+                    sessionStorage.setItem('userEmail', email);
+                    sessionStorage.setItem('userName', profile?.full_name || email.split('@')[0]);
+                    sessionStorage.setItem('userRole', profile?.role || 'user');
+
+                    // Redirect to dashboard
                     window.location.href = 'recovery-nm-dashboard.html';
-                }, 1000);
-
-            } catch (error) {
-                console.error('❌ Login failed:', error);
-                
-                let errorMsg = 'Login failed. Please check your credentials.';
-                if (error.message.includes('Invalid login credentials')) {
-                    errorMsg = 'Invalid email or password. Please try again.';
-                } else if (error.message.includes('Email not confirmed')) {
-                    errorMsg = 'Please verify your email before logging in.';
+                } else {
+                    showError('Login failed. Please try again.');
+                    loginButton.disabled = false;
+                    loginButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
                 }
-                
-                showError(errorMsg);
-
-                // Reset button state
-                loginBtn.disabled = false;
-                loginBtn.classList.remove('loading');
-                loginBtn.querySelector('span').textContent = 'Login';
+            } catch (error) {
+                console.error('Login error:', error);
+                showError(error.message || 'Login failed. Please check your credentials.');
+                loginButton.disabled = false;
+                loginButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
             }
         });
 
         // Check if already logged in
-        recoveryNmClient.auth.getSession().then(({ data: { session } }) => {
+        window.addEventListener('load', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
             if (session) {
-                console.log('✅ Already logged in, redirecting...');
                 window.location.href = 'recovery-nm-dashboard.html';
             }
         });
+
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('✅ Recovery NM: Service Worker registered:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('❌ Recovery NM: Service Worker registration failed:', error);
+                    });
+            });
+        }
     </script>
 </body>
 </html>
