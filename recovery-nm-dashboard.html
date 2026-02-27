@@ -895,7 +895,17 @@
                 const { data: scholarships } = await client
                     .from('scholarships')
                     .select(`
-                        *,
+                        id,
+                        scholarship_id,
+                        client_id,
+                        treatment_center_id,
+                        amount,
+                        award_date,
+                        approved_date,
+                        insurance_situation,
+                        purpose,
+                        status,
+                        created_at,
                         clients (client_identifier),
                         treatment_centers (center_name)
                     `)
